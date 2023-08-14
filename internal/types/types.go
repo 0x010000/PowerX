@@ -1154,6 +1154,7 @@ type Product struct {
 	SaleEndDate            string                         `json:"saleEndDate,optional"`
 	ApprovalStatus         int                            `json:"approvalStatus,optional"`
 	IsActivated            bool                           `json:"isActivated,optional,omitempty"`
+	Sort                   int                            `json:"sort,optional,omitempty"`
 	CreatedAt              string                         `json:"createdAt,optional"`
 	ProductSpecifics       []*ProductSpecific             `json:"productSpecifics,optional"`
 	PivotSalesChannels     []*PivotDataDictionaryToObject `json:"pivotSalesChannels,optional"`
@@ -1175,7 +1176,7 @@ type Product struct {
 
 type ListProductsPageRequest struct {
 	LikeName          string   `form:"likeName,optional"`
-	ProductType       string   `form:"productType,optional"`
+	ProductTypeIds    []int    `form:"productTypeIds,optional"`
 	Keys              []string `form:"keys,optional"`
 	ProductCategoryId int      `form:"productCategoryId,optional"`
 	OrderBy           string   `form:"orderBy,optional"`
