@@ -92,5 +92,7 @@ func (m *PowerMigrator) AutoMigrate() {
 	// wechat tag
 	_ = m.db.AutoMigrate(&tag.WeWorkTag{}, &tag.WeWorkTagGroup{})
 	// qrcode
-	_ = m.db.AutoMigrate(&scene.SceneQrcode{})
+	_ = m.db.AutoMigrate(&scene.SceneQrcode{}, &scene.SceneClassify{})
+	_ = m.db.AutoMigrate(&scene.SceneActivities{}, &scene.SceneActivitiesParticipants{})
+	_ = m.db.AutoMigrate(&scene.SceneContent{})
 }
