@@ -128,12 +128,13 @@ type iWeWorkCustomerInterface interface {
 	PullListWeWorkCustomerRequest(userID ...string) ([]*customerResp.ResponseExternalContact, error)
 	//
 	// PullListWeWorkCustomerGroupRequest
-	//  @Description: 拉取客户群列表
+	//  @Description:
 	//  @param opt
+	//  @param sync
 	//  @return list
 	//  @return err
 	//
-	PullListWeWorkCustomerGroupRequest(opt *customerGroupReq.RequestGroupChatList) (list []*customerGroupResp.ResponseGroupChatGet, err error)
+	PullListWeWorkCustomerGroupRequest(opt *customerGroupReq.RequestGroupChatList, sync bool) (list []*customerGroupResp.GroupChat, err error)
 
 	//
 	// FindManyWechatCustomerPage
@@ -155,6 +156,15 @@ type iWeWorkCustomerInterface interface {
 	//  @return error
 	//
 	PushWoWorkCustomerTemplateRequest(opt *creq.RequestAddMsgTemplate, sendTime int64) (*crsp.ResponseAddMessageTemplate, error)
+
+	//
+	// GetCustomerGroupFromKVByUserId
+	//  @Description: 获取指定客户群内的人员信息
+	//  @param chatId
+	//  @param userId
+	//  @return interface{}
+	//
+	GetCustomerGroupFromKVByUserId(chatId, userId string) interface{}
 }
 
 // iWeWorkBotInterface

@@ -125,7 +125,8 @@ func NewPowerXUseCase(conf *config.Config) (uc *PowerXUseCase, clean func()) {
 	uc.SCRM.Schedule()
 
 	// 加载Scene
-	uc.Scene = powerx.NewSceneUseCase(db, uc.redis)
+	uc.Scene = powerx.NewSceneUseCase(db, uc.redis, c)
+	uc.Scene.Schedule()
 
 	return uc, func() {
 		_ = sqlDB.Close()

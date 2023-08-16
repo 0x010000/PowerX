@@ -25,6 +25,7 @@ import (
 	adminproductpricebookentry "PowerX/internal/handler/admin/product/pricebookentry"
 	adminproductproductspecific "PowerX/internal/handler/admin/product/productspecific"
 	adminproductsku "PowerX/internal/handler/admin/product/sku"
+	adminsceneactive "PowerX/internal/handler/admin/scene/active"
 	adminscrmapp "PowerX/internal/handler/admin/scrm/app"
 	adminscrmbot "PowerX/internal/handler/admin/scrm/bot"
 	adminscrmcustomer "PowerX/internal/handler/admin/scrm/customer"
@@ -55,6 +56,7 @@ import (
 	webcustomerauth "PowerX/internal/handler/web/customer/auth"
 	webcustomerauthoa "PowerX/internal/handler/web/customer/auth/oa"
 	webscene "PowerX/internal/handler/web/scene"
+	websceneactive "PowerX/internal/handler/web/scene/active"
 	"PowerX/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -1367,6 +1369,35 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.EmployeeJWTAuth},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/page",
+					Handler: adminsceneactive.ListSceneActivitiesPageHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/create",
+					Handler: adminsceneactive.CreateSceneActivitiesHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPatch,
+					Path:    "/update/:aid",
+					Handler: adminsceneactive.UpdateSceneActivitiesHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/qrcode/options",
+					Handler: adminsceneactive.ListSceneQrcodeOptionHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/scene/active"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
 			[]rest.Middleware{serverCtx.MPCustomerJWTAuth},
 			[]rest.Route{
 				{
@@ -1882,5 +1913,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/api/v1/web/scene"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/:aid",
+				Handler: websceneactive.ActionSceneActivitiesDetailHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/web/scene/active"),
 	)
 }

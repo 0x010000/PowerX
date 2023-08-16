@@ -9,9 +9,10 @@ import (
 type SceneContent struct {
 	model.Model
 
-	Name string `gorm:"comment:场景名称;column:name" json:"name"`
-	Desc string `gorm:"comment:场景描述;column:desc" json:"desc"`
-	Rule string `gorm:"comment:场景规则;column:rule" json:"rule"`
+	Name  string `gorm:"comment:场景名称;column:name" json:"name"`
+	Desc  string `gorm:"comment:场景声明描述;column:desc" json:"desc"`
+	Rule  string `gorm:"comment:场景规则JSON;column:rule" json:"rule"`
+	State int    `json:"state"`
 }
 
 //

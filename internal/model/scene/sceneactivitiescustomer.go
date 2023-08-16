@@ -9,12 +9,13 @@ import (
 type SceneActivitiesParticipants struct {
 	model.Model
 
-	Aid             string `gorm:"comment:活动ID;column:aid;" json:"aid"`
-	UserId          string `gorm:"comment:用户ID;column:user_id;unique;" json:"user_id"`
+	Aid             uint64 `gorm:"comment:活动ID;column:aid;" json:"aid"`
+	UserId          string `gorm:"comment:用户ID;column:user_id;" json:"user_id"`
 	UserName        string `gorm:"comment:用户;column:user_name;" json:"user_name"`
 	ShareUserId     string `gorm:"comment:分享用户ID;column:share_user_id;" json:"share_user_id"`
 	ShareUserChain  string `gorm:"comment:分享用户链;column:share_user_chain;" json:"share_user_chain"`
 	CustomerGroupId string `gorm:"comment:客户群ID;column:customer_group_id;" json:"customer_group_id"`
+	TaskState       int    `gorm:"comment:任务状态;column:task_state;" json:"task_state"`
 }
 
 //
@@ -54,7 +55,7 @@ func (e *SceneActivitiesParticipants) Query(db *gorm.DB) (active []*SceneActivit
 //
 func (e *SceneActivitiesParticipants) Action(db *gorm.DB, active []*SceneActivitiesParticipants) {
 
-	err := db.Table(e.TableName()).Clauses(clause.OnConflict{Columns: []clause.Column{{Name: "id"}}, UpdateAll: true}).Create(&active).Error
+	err := db.Table(e.TableName()).Debug().Clauses(clause.OnConflict{Columns: []clause.Column{{Name: "id"}}, UpdateAll: true}).Create(&active).Error
 	if err != nil {
 		panic(err)
 	}

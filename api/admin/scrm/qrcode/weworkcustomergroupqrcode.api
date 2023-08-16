@@ -79,15 +79,16 @@ type (
     }
 
     QrcodeActiveRequest {
-        Qid string `path:"qid,optional"`                                      // 更新操作使用
-        Name string `json:"name"`                                             // 活码名称
-        Desc string `json:"desc"`                                             // 描述
-        Owner []string `json:"owner"`                                         // 所属人
-        RealQrcodeLink string `json:"RealQrcodeLink"`                         // 真实二维码地址
-                                                                              // Classify int `json:"classify"`                                // 类型 1: 群 2：客户 3：渠道
-        SceneLink string `json:"sceneLink"`                                   // 场景落地页
-        SafeThresholdValue int `json:"safeThresholdValue,optional"`           // 安全阈值（默认:0）
-        ExpiryDate int64 `json:"expiryDate"`                                  // 有效期截止日(时间戳)
+        Qid string `path:"qid,optional"`                                               // 更新操作使用
+        Name string `json:"name"`                                                      // 活码名称
+        Desc string `json:"desc"`                                                      // 描述
+        Owner []string `json:"owner"`                                                  // 所属人
+        RealQrcodeLink string `json:"RealQrcodeLink"`                                  // 真实二维码地址
+                                                                                       // Classify int `json:"classify"`                                // 类型 1: 群 2：客户 3：渠道
+        SceneLink string `json:"sceneLink"`                                            // 场景落地页
+        SafeThresholdValue int `json:"safeThresholdValue,optional"`                    // 安全阈值（默认:0）
+        ExpiryDate int64 `json:"expiryDate"`                                           // 有效期截止日(时间戳)
+        UnionId string `json:"unionId,optional"`                                       // 绑定ID(群ID,团ID...)
     }
 
     ActionRequest {

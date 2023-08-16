@@ -38,8 +38,8 @@ func (qrcode *DetailQrcodeLogic) DetailQrcode(opt *types.SceneRequest) (resp *ty
 		return nil, fmt.Errorf(`Qid error`)
 	}
 
-	detail := qrcode.svcCtx.PowerX.Scene.Scene.FindOneSceneQrcodeDetail(opt.Qid)
-	go qrcode.svcCtx.PowerX.Scene.Scene.IncreaseSceneCpaNumber(opt.Qid)
+	detail := qrcode.svcCtx.PowerX.Scene.Svc.FindOneSceneQrcodeDetail(opt.Qid)
+	go qrcode.svcCtx.PowerX.Scene.Svc.IncreaseSceneCpaNumber(opt.Qid)
 
 	return &types.SceneQrcodeActiveReply{
 		QId:                detail.QId,

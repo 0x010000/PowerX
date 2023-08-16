@@ -2,17 +2,18 @@ package scene
 
 import (
 	"PowerX/internal/model/scene"
+	"PowerX/internal/types"
 )
 
 // FindOneSceneQrcodeDetail
 //
 //	@Description:
-//	@receiver this
+//	@receiver sc
 //	@param qid
 //	@return *qrcode.QrcodeActive
-func (this *sceneUseCase) FindOneSceneQrcodeDetail(qid string) *scene.SceneQrcode {
+func (sc *sceneUseCase) FindOneSceneQrcodeDetail(qid string) *scene.SceneQrcode {
 
-	qrcode := this.modelSceneQrcode.qrcode.FindEnableSceneQrcodeByQid(this.db, qid)
+	qrcode := sc.modelSceneQrcode.qrcode.FindEnableSceneQrcodeByQid(sc.db, qid)
 
 	return qrcode
 
@@ -21,9 +22,24 @@ func (this *sceneUseCase) FindOneSceneQrcodeDetail(qid string) *scene.SceneQrcod
 // IncreaseSceneCpaNumber
 //
 //	@Description:
-//	@receiver this
+//	@receiver sc
 //	@param qid
-func (this *sceneUseCase) IncreaseSceneCpaNumber(qid string) {
+func (sc *sceneUseCase) IncreaseSceneCpaNumber(qid string) {
 
-	this.modelSceneQrcode.qrcode.IncreaseCpa(this.db, qid)
+	sc.modelSceneQrcode.qrcode.IncreaseCpa(sc.db, qid)
+}
+
+//
+// FindSceneQrcodeOption
+//  @Description:
+//  @receiver sc
+//  @param opt
+//  @return []*scene.SceneQrcode
+//
+func (sc *sceneUseCase) FindSceneQrcodeOption(opt *types.SceneQrcodeRequest) []*scene.SceneQrcode {
+
+	qrcode := sc.modelSceneQrcode.qrcode.Options(sc.db, opt)
+
+	return qrcode
+
 }

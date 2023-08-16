@@ -1,0 +1,201 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "小程序客户模块",
+    "description": "小程序客户模块接口集合",
+    "version": "v1"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/mp/customer/authByPhone": {
+      "post": {
+        "summary": "客户手机授权",
+        "operationId": "AuthByPhone",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/MPCustomerLoginAuthReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MPCustomerAuthRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "mp/customer/auth"
+        ]
+      }
+    },
+    "/api/v1/mp/customer/authByProfile": {
+      "post": {
+        "summary": "客户信息授权",
+        "operationId": "AuthByProfile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/MPCustomerLoginAuthReply"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "mp/customer/auth"
+        ]
+      }
+    },
+    "/api/v1/mp/customer/login": {
+      "post": {
+        "summary": "微信小程序登录",
+        "operationId": "Login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/MPCustomerLoginAuthReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MPCustomerLoginRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "mp/customer/auth"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "MPCustomerAuthRequest": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "iv": {
+          "type": "string"
+        },
+        "encryptedData": {
+          "type": "string"
+        }
+      },
+      "title": "MPCustomerAuthRequest",
+      "required": [
+        "code",
+        "iv",
+        "encryptedData"
+      ]
+    },
+    "MPCustomerLoginAuthReply": {
+      "type": "object",
+      "properties": {
+        "openId": {
+          "type": "string"
+        },
+        "unionId": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "nickName": {
+          "type": "string"
+        },
+        "avatarURL": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "token": {
+          "$ref": "#/definitions/MPToken"
+        }
+      },
+      "title": "MPCustomerLoginAuthReply",
+      "required": [
+        "openId",
+        "unionId",
+        "phoneNumber",
+        "nickName",
+        "avatarURL",
+        "gender",
+        "token"
+      ]
+    },
+    "MPCustomerLoginRequest": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        }
+      },
+      "title": "MPCustomerLoginRequest",
+      "required": [
+        "code"
+      ]
+    },
+    "MPToken": {
+      "type": "object",
+      "properties": {
+        "tokenType": {
+          "type": "string"
+        },
+        "expiresIn": {
+          "type": "string"
+        },
+        "accessToken": {
+          "type": "string"
+        },
+        "refreshToken": {
+          "type": "string"
+        }
+      },
+      "title": "MPToken",
+      "required": [
+        "tokenType",
+        "expiresIn",
+        "accessToken",
+        "refreshToken"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "apiKey": []
+    }
+  ]
+}

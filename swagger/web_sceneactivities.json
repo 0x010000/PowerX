@@ -1,0 +1,287 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "活动管理",
+    "description": "活动管理",
+    "version": "v1"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/web/scene/active/{aid}": {
+      "post": {
+        "summary": "活动信息",
+        "operationId": "ActionSceneActivitiesDetail",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ActivitiesInfoReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ActivitiesInfoRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "web/scene/active"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ActivitiesInfoReply": {
+      "type": "object",
+      "properties": {
+        "activities": {
+          "$ref": "#/definitions/ActivitiesWeb",
+          "description": " 活动信息"
+        },
+        "activitiesPoster": {
+          "$ref": "#/definitions/PosterWeb",
+          "description": " 活动海报"
+        },
+        "activitiesSceneQrcode": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActivitiesQrcodeWeb"
+          },
+          "description": " 活动场景码"
+        },
+        "activitiesParticipants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ParticipantsWeb"
+          },
+          "description": " 参与概况"
+        },
+        "ActivitiesContent": {
+          "type": "object",
+          "description": " 活动内容"
+        },
+        "state": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " userID是否可以参与活动"
+        }
+      },
+      "title": "ActivitiesInfoReply",
+      "required": [
+        "activities",
+        "activitiesPoster",
+        "activitiesSceneQrcode",
+        "activitiesParticipants",
+        "ActivitiesContent",
+        "state"
+      ]
+    },
+    "ActivitiesInfoRequest": {
+      "type": "object",
+      "properties": {
+        "aid": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "userName": {
+          "type": "string"
+        },
+        "shareUserId": {
+          "type": "string"
+        }
+      },
+      "title": "ActivitiesInfoRequest",
+      "required": [
+        "aid",
+        "userId"
+      ]
+    },
+    "ActivitiesQrcodeWeb": {
+      "type": "object",
+      "properties": {
+        "qid": {
+          "type": "string",
+          "description": " 场景码Code"
+        },
+        "link": {
+          "type": "string",
+          "description": " 场景码Link"
+        },
+        "unionId": {
+          "type": "string",
+          "description": " 绑定ID(群ID,团ID...)"
+        }
+      },
+      "title": "ActivitiesQrcodeWeb"
+    },
+    "ActivitiesWeb": {
+      "type": "object",
+      "properties": {
+        "aid": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 活动ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 活动名称"
+        },
+        "desc": {
+          "type": "string",
+          "description": " 描述"
+        },
+        "owner": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": " 负责人"
+        },
+        "startTime": {
+          "type": "string",
+          "description": " 开始时间"
+        },
+        "endTime": {
+          "type": "string",
+          "description": " 结束时间"
+        },
+        "classifyId": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 活动分类"
+        },
+        "activitiesContentId": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 活动内容ID"
+        },
+        "state": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 活动状态; 1:未开始 2::进行中 3:已结束  [5:上架 6:下架]"
+        }
+      },
+      "title": "ActivitiesWeb",
+      "required": [
+        "aid",
+        "name",
+        "desc",
+        "owner",
+        "startTime",
+        "endTime",
+        "classifyId",
+        "activitiesContentId",
+        "state"
+      ]
+    },
+    "ParticipantsWeb": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "userName": {
+          "type": "string"
+        },
+        "taskState": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 任务状态"
+        },
+        "shareTaskNumber": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 链下受邀人数"
+        },
+        "vaildShareTaskNumber": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 链下完成任务人数"
+        }
+      },
+      "title": "ParticipantsWeb",
+      "required": [
+        "userId",
+        "userName",
+        "taskState",
+        "shareTaskNumber",
+        "vaildShareTaskNumber"
+      ]
+    },
+    "PosterWeb": {
+      "type": "object",
+      "properties": {
+        "photoState": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 是否启用头像"
+        },
+        "AliseState": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 是否启用昵称"
+        },
+        "coverLink": {
+          "type": "string",
+          "description": " 活动封面Link"
+        },
+        "link": {
+          "type": "string",
+          "description": " 落地页(场景落地页;其他落地页)"
+        },
+        "position": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": " 落地页二维码位置100,200"
+        }
+      },
+      "title": "PosterWeb",
+      "required": [
+        "photoState",
+        "AliseState",
+        "coverLink",
+        "link",
+        "position"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "apiKey": []
+    }
+  ]
+}

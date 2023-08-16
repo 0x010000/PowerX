@@ -2351,6 +2351,7 @@ type WeWorkCustomerGroupRequest struct {
 	OwnerFilter  OwnerFilter `json:"ownerFilter,optional"`
 	Cursor       string      `json:"cursor,optional"`
 	Limit        int         `json:"limit,optional"`
+	Sync         bool        `json:"sync,optional"`
 }
 
 type OwnerFilter struct {
@@ -2506,6 +2507,7 @@ type QrcodeActiveRequest struct {
 	SceneLink          string   `json:"sceneLink"`                   // 场景落地页
 	SafeThresholdValue int      `json:"safeThresholdValue,optional"` // 安全阈值（默认:0）
 	ExpiryDate         int64    `json:"expiryDate"`                  // 有效期截止日(时间戳)
+	UnionId            string   `json:"unionId,optional"`            // 绑定ID(群ID,团ID...)
 }
 
 type ActionRequest struct {
@@ -2619,6 +2621,108 @@ type ActionCustomerTagRequest struct {
 	ExternalUserId string   `json:"externalUserId"`
 	AddTag         []string `json:"addTag,optional"`
 	RemoveTag      []string `json:"removeTag,optional"`
+}
+
+type ActivitiesListRequest struct {
+	Name      string `json:"name,optional"`
+	State     int    `json:"state,optional"`
+	PageIndex int    `form:"pageIndex,optional"`
+	PageSize  int    `form:"pageSize,optional"`
+}
+
+type ActivitiesListReply struct {
+	List      []*Active `json:"list"`
+	PageIndex int       `json:"pageIndex"`
+	PageSize  int       `json:"pageSize"`
+	Total     int64     `json:"total"`
+}
+
+type Active struct {
+	Activities             Activities          `json:"activities"`             // 活动信息
+	ActivitiesPoster       Poster              `json:"activitiesPoster"`       // 活动海报
+	ActivitiesSceneQrcode  []*ActivitiesQrcode `json:"activitiesSceneQrcode"`  // 活动场景码
+	ActivitiesParticipants Participants        `json:"activitiesParticipants"` // 参与概况
+	ActivitiesContent      interface{}         `json:"ActivitiesContent"`      // 活动内容
+}
+
+type Activities struct {
+	Id                  int      `json:"id"`                  // 主键
+	Aid                 uint64   `json:"aid"`                 // 活动ID
+	Name                string   `json:"name"`                // 活动名称
+	Desc                string   `json:"desc"`                // 描述
+	Owner               []string `json:"owner"`               // 负责人
+	StartTime           string   `json:"startTime"`           // 开始时间
+	EndTime             string   `json:"endTime"`             // 结束时间
+	ClassifyId          int      `json:"classifyId"`          // 活动分类
+	ActivitiesContentId int      `json:"activitiesContentId"` // 活动内容ID
+	State               int      `json:"state"`               // 活动状态; 1:未开始 2::进行中 3:已结束  [5:上架 6:下架]
+}
+
+type Poster struct {
+	PhotoState bool     `json:"photoState"` // 是否启用头像
+	AliseState bool     `json:"AliseState"` // 是否启用昵称
+	CoverLink  string   `json:"coverLink"`  // 活动封面Link
+	Link       string   `json:"link"`       // 落地页(场景落地页;其他落地页)
+	Position   []string `json:"position"`   // 落地页二维码位置100,200
+}
+
+type Participants struct {
+	EnterGroupNumber int `json:"enterGroupNumber"` // 进群人数
+	DoneTaskNumber   int `json:"doneTaskNumber"`   // 完成任务人数
+}
+
+type ActionActiveRequest struct {
+	Aid               uint64             `path:"aid,optional"` // aid
+	Activities        ActionActivities   `json:"activities"`
+	ActionPoster      ActionPoster       `json:"activitiesPoster"`
+	ActionSceneQrcode []ActivitiesQrcode `json:"activitiesSceneQrcode"`
+}
+
+type ActionActivities struct {
+	Name                string   `json:"name"`                         // 活动名称
+	Desc                string   `json:"desc,optional"`                // 描述
+	Owner               []string `json:"owner,optional"`               // 负责人
+	StartTime           int64    `json:"startTime"`                    // 开始时间
+	EndTime             int64    `json:"endTime"`                      // 结束时间
+	ClassifyId          int      `json:"classifyId,optional"`          // 活动分类
+	ActivitiesContentId int      `json:"activitiesContentId,optional"` // 活动内容ID
+}
+
+type ActionPoster struct {
+	PhotoState bool     `json:"photoState,optional"` // 是否启用头像
+	AliseState bool     `json:"AliseState,optional"` // 是否启用昵称
+	CoverLink  string   `json:"coverLink,optional"`  // 活动封面Link
+	Link       string   `json:"link,optional"`       // 落地页(场景落地页;其他落地页)
+	Position   []string `json:"position,optional"`   // 落地页二维码位置100,200
+}
+
+type ActivitiesQrcode struct {
+	Qid  string `json:"qid,optional"`  // 场景码Code
+	Link string `json:"link,optional"` // 场景码Link
+}
+
+type StateReply struct {
+	Status string `json:"status"`
+}
+
+type SceneQrcodeOptionReply struct {
+	List []*SceneQrcode `json:"list"`
+}
+
+type SceneQrcodeRequest struct {
+	Qid        string `json:"qid,optional"`
+	Owner      string `json:"owner,optional"`
+	ClassifyId int    `json:"classifyId,optional"`
+	Name       string `json:"name,optional"`
+}
+
+type SceneQrcode struct {
+	Qid              string `json:"qid"` // 场景码Code
+	Name             string `json:"name"`
+	RealQrcodeLink   string `json:"realQrcodeLink"` // 真实码
+	Platform         int    `json:"platform"`
+	ActiveQrcodeLink string `json:"activeQrcodeLink"` // 场景码
+	State            int    `json:"state"`
 }
 
 type MPCustomerLoginRequest struct {
@@ -3081,4 +3185,54 @@ type SceneQrcodeActiveReply struct {
 
 type SceneRequest struct {
 	Qid string `path:"qid"` // 唯一标识
+}
+
+type ActivitiesInfoRequest struct {
+	Aid         uint64 `path:"aid"`
+	UserId      string `json:"userId"`
+	UserName    string `json:"userName,optional"`
+	ShareUserId string `json:"shareUserId,optional"`
+}
+
+type ActivitiesInfoReply struct {
+	Activities             ActivitiesWeb          `json:"activities"`             // 活动信息
+	ActivitiesPoster       PosterWeb              `json:"activitiesPoster"`       // 活动海报
+	ActivitiesSceneQrcode  []*ActivitiesQrcodeWeb `json:"activitiesSceneQrcode"`  // 活动场景码
+	ActivitiesParticipants []*ParticipantsWeb     `json:"activitiesParticipants"` // 参与概况
+	ActivitiesContent      interface{}            `json:"ActivitiesContent"`      // 活动内容
+	State                  bool                   `json:"state"`                  // userID是否可以参与活动
+}
+
+type ActivitiesWeb struct {
+	Aid                 uint64   `json:"aid"`                 // 活动ID
+	Name                string   `json:"name"`                // 活动名称
+	Desc                string   `json:"desc"`                // 描述
+	Owner               []string `json:"owner"`               // 负责人
+	StartTime           string   `json:"startTime"`           // 开始时间
+	EndTime             string   `json:"endTime"`             // 结束时间
+	ClassifyId          int      `json:"classifyId"`          // 活动分类
+	ActivitiesContentId int      `json:"activitiesContentId"` // 活动内容ID
+	State               int      `json:"state"`               // 活动状态; 1:未开始 2::进行中 3:已结束  [5:上架 6:下架]
+}
+
+type PosterWeb struct {
+	PhotoState bool     `json:"photoState"` // 是否启用头像
+	AliseState bool     `json:"AliseState"` // 是否启用昵称
+	CoverLink  string   `json:"coverLink"`  // 活动封面Link
+	Link       string   `json:"link"`       // 落地页(场景落地页;其他落地页)
+	Position   []string `json:"position"`   // 落地页二维码位置100,200
+}
+
+type ParticipantsWeb struct {
+	UserId               string `json:"userId"`
+	UserName             string `json:"userName"`
+	TaskState            int    `json:"taskState"`            // 任务状态
+	ShareTaskNumber      int    `json:"shareTaskNumber"`      // 链下受邀人数
+	VaildShareTaskNumber int    `json:"vaildShareTaskNumber"` // 链下完成任务人数
+}
+
+type ActivitiesQrcodeWeb struct {
+	Qid     string `json:"qid,optional"`     // 场景码Code
+	Link    string `json:"link,optional"`    // 场景码Link
+	UnionId string `json:"unionId,optional"` // 绑定ID(群ID,团ID...)
 }

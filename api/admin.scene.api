@@ -1,1 +1,1 @@
-import "admin/scene/activities/sceneactivities.api"
+import "admin/scene/active/sceneactivities.api"

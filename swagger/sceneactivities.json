@@ -1,0 +1,566 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "活动管理",
+    "description": "活动管理",
+    "version": "v1"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/admin/scene/active/create": {
+      "post": {
+        "summary": "创建活动",
+        "operationId": "CreateSceneActivities",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/StateReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ActionActiveRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "admin/scene/active"
+        ]
+      }
+    },
+    "/api/v1/admin/scene/active/page": {
+      "post": {
+        "summary": "活动列表/page",
+        "operationId": "ListSceneActivitiesPage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ActivitiesListReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ActivitiesListRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "admin/scene/active"
+        ]
+      }
+    },
+    "/api/v1/admin/scene/active/qrcode/options": {
+      "post": {
+        "summary": "场景码列表/option",
+        "operationId": "ListSceneQrcodeOption",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/SceneQrcodeOptionReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SceneQrcodeRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "admin/scene/active"
+        ]
+      }
+    },
+    "/api/v1/admin/scene/active/update/{aid}": {
+      "patch": {
+        "summary": "更新活动",
+        "operationId": "UpdateSceneActivities",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/StateReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ActionActiveRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "admin/scene/active"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ActionActiveRequest": {
+      "type": "object",
+      "properties": {
+        "aid": {
+          "type": "integer",
+          "format": "int64",
+          "description": " aid"
+        },
+        "activities": {
+          "$ref": "#/definitions/ActionActivities"
+        },
+        "activitiesPoster": {
+          "$ref": "#/definitions/ActionPoster"
+        },
+        "activitiesSceneQrcode": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActivitiesQrcode"
+          }
+        }
+      },
+      "title": "ActionActiveRequest",
+      "required": [
+        "activities",
+        "activitiesPoster",
+        "activitiesSceneQrcode"
+      ]
+    },
+    "ActionActivities": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 活动名称"
+        },
+        "desc": {
+          "type": "string",
+          "description": " 描述"
+        },
+        "owner": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": " 负责人"
+        },
+        "startTime": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 开始时间"
+        },
+        "endTime": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 结束时间"
+        },
+        "classifyId": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 活动分类"
+        },
+        "activitiesContentId": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 活动内容ID"
+        }
+      },
+      "title": "ActionActivities",
+      "required": [
+        "name",
+        "startTime",
+        "endTime"
+      ]
+    },
+    "ActionPoster": {
+      "type": "object",
+      "properties": {
+        "photoState": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 是否启用头像"
+        },
+        "AliseState": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 是否启用昵称"
+        },
+        "coverLink": {
+          "type": "string",
+          "description": " 活动封面Link"
+        },
+        "link": {
+          "type": "string",
+          "description": " 落地页(场景落地页;其他落地页)"
+        },
+        "position": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": " 落地页二维码位置100,200"
+        }
+      },
+      "title": "ActionPoster"
+    },
+    "Active": {
+      "type": "object",
+      "properties": {
+        "activities": {
+          "$ref": "#/definitions/Activities",
+          "description": " 活动信息"
+        },
+        "activitiesPoster": {
+          "$ref": "#/definitions/Poster",
+          "description": " 活动海报"
+        },
+        "activitiesSceneQrcode": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActivitiesQrcode"
+          },
+          "description": " 活动场景码"
+        },
+        "activitiesParticipants": {
+          "$ref": "#/definitions/Participants",
+          "description": " 参与概况"
+        },
+        "ActivitiesContent": {
+          "type": "object",
+          "description": " 活动内容"
+        }
+      },
+      "title": "Active",
+      "required": [
+        "activities",
+        "activitiesPoster",
+        "activitiesSceneQrcode",
+        "activitiesParticipants",
+        "ActivitiesContent"
+      ]
+    },
+    "Activities": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 主键"
+        },
+        "aid": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 活动ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 活动名称"
+        },
+        "desc": {
+          "type": "string",
+          "description": " 描述"
+        },
+        "owner": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": " 负责人"
+        },
+        "startTime": {
+          "type": "string",
+          "description": " 开始时间"
+        },
+        "endTime": {
+          "type": "string",
+          "description": " 结束时间"
+        },
+        "classifyId": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 活动分类"
+        },
+        "activitiesContentId": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 活动内容ID"
+        },
+        "state": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 活动状态; 1:未开始 2::进行中 3:已结束  [5:上架 6:下架]"
+        }
+      },
+      "title": "Activities",
+      "required": [
+        "id",
+        "aid",
+        "name",
+        "desc",
+        "owner",
+        "startTime",
+        "endTime",
+        "classifyId",
+        "activitiesContentId",
+        "state"
+      ]
+    },
+    "ActivitiesListReply": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Active"
+          }
+        },
+        "pageIndex": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "ActivitiesListReply",
+      "required": [
+        "list",
+        "pageIndex",
+        "pageSize",
+        "total"
+      ]
+    },
+    "ActivitiesListRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "state": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageIndex": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "ActivitiesListRequest"
+    },
+    "ActivitiesQrcode": {
+      "type": "object",
+      "properties": {
+        "qid": {
+          "type": "string",
+          "description": " 场景码Code"
+        },
+        "link": {
+          "type": "string",
+          "description": " 场景码Link"
+        }
+      },
+      "title": "ActivitiesQrcode"
+    },
+    "Participants": {
+      "type": "object",
+      "properties": {
+        "enterGroupNumber": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 进群人数"
+        },
+        "doneTaskNumber": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 完成任务人数"
+        }
+      },
+      "title": "Participants",
+      "required": [
+        "enterGroupNumber",
+        "doneTaskNumber"
+      ]
+    },
+    "Poster": {
+      "type": "object",
+      "properties": {
+        "photoState": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 是否启用头像"
+        },
+        "AliseState": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 是否启用昵称"
+        },
+        "coverLink": {
+          "type": "string",
+          "description": " 活动封面Link"
+        },
+        "link": {
+          "type": "string",
+          "description": " 落地页(场景落地页;其他落地页)"
+        },
+        "position": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": " 落地页二维码位置100,200"
+        }
+      },
+      "title": "Poster",
+      "required": [
+        "photoState",
+        "AliseState",
+        "coverLink",
+        "link",
+        "position"
+      ]
+    },
+    "SceneQrcode": {
+      "type": "object",
+      "properties": {
+        "qid": {
+          "type": "string",
+          "description": " 场景码Code"
+        },
+        "name": {
+          "type": "string"
+        },
+        "realQrcodeLink": {
+          "type": "string",
+          "description": " 真实码"
+        },
+        "platform": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "activeQrcodeLink": {
+          "type": "string",
+          "description": " 场景码"
+        },
+        "state": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "SceneQrcode",
+      "required": [
+        "qid",
+        "name",
+        "realQrcodeLink",
+        "platform",
+        "activeQrcodeLink",
+        "state"
+      ]
+    },
+    "SceneQrcodeOptionReply": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SceneQrcode"
+          }
+        }
+      },
+      "title": "SceneQrcodeOptionReply",
+      "required": [
+        "list"
+      ]
+    },
+    "SceneQrcodeRequest": {
+      "type": "object",
+      "properties": {
+        "qid": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "classifyId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "SceneQrcodeRequest"
+    },
+    "StateReply": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "StateReply",
+      "required": [
+        "status"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "apiKey": []
+    }
+  ]
+}

@@ -33,6 +33,7 @@ type (
         OwnerFilter OwnerFilter `json:"ownerFilter,optional"`
         Cursor string `json:"cursor,optional"`
         Limit int `json:"limit,optional"`
+        Sync bool `json:"sync,optional"`
     }
     OwnerFilter struct {
         UseridList []string `json:"useridList,optional"`
