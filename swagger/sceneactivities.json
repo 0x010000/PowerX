@@ -151,10 +151,7 @@
           "$ref": "#/definitions/ActionPoster"
         },
         "activitiesSceneQrcode": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ActivitiesQrcode"
-          }
+          "$ref": "#/definitions/ActivitiesWithQrcode"
         }
       },
       "title": "ActionActiveRequest",
@@ -253,10 +250,7 @@
           "description": " 活动海报"
         },
         "activitiesSceneQrcode": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ActivitiesQrcode"
-          },
+          "$ref": "#/definitions/ActivitiesWithQrcode",
           "description": " 活动场景码"
         },
         "activitiesParticipants": {
@@ -408,6 +402,26 @@
       },
       "title": "ActivitiesQrcode"
     },
+    "ActivitiesWithQrcode": {
+      "type": "object",
+      "properties": {
+        "memberMaxLimit": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 单群，团最大限制数，自动切换下一个，至少保留一个"
+        },
+        "actionSceneQrcode": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActivitiesQrcode"
+          }
+        }
+      },
+      "title": "ActivitiesWithQrcode",
+      "required": [
+        "actionSceneQrcode"
+      ]
+    },
     "Participants": {
       "type": "object",
       "properties": {
@@ -455,6 +469,11 @@
             "type": "string"
           },
           "description": " 落地页二维码位置100,200"
+        },
+        "memberMaxLimit": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 单群，团最大限制数，自动切换下一个，至少保留一个"
         }
       },
       "title": "Poster",
@@ -490,7 +509,12 @@
         },
         "state": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": " 状态"
+        },
+        "unifyId": {
+          "type": "string",
+          "description": " 群团ID"
         }
       },
       "title": "SceneQrcode",
@@ -500,7 +524,8 @@
         "realQrcodeLink",
         "platform",
         "activeQrcodeLink",
-        "state"
+        "state",
+        "unifyId"
       ]
     },
     "SceneQrcodeOptionReply": {

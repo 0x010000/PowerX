@@ -24,7 +24,9 @@ func NewAssignStoreToStoreManagerLogic(ctx context.Context, svcCtx *svc.ServiceC
 }
 
 func (l *AssignStoreToStoreManagerLogic) AssignStoreToStoreManager(req *types.AssignStoreManagerRequest) (resp *types.AssignStoreManagerReply, err error) {
-	// todo: add your logic here and delete this line
 
-	return
+	err = l.svcCtx.PowerX.Store.ActionPivotStoreToEmployee(l.ctx, req.Id, req.EmployeeId, req.UserId)
+	return &types.AssignStoreManagerReply{
+		Store: types.Store{},
+	}, err
 }

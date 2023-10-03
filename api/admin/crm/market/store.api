@@ -164,6 +164,7 @@ type (
     AssignStoreManagerRequest {
         Id int64 `path:"id"`
         EmployeeId int64 `json:"employeeId"`
+        UserId string `json:"userId,optional"`
     }
 
     AssignStoreManagerReply {

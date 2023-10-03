@@ -8,8 +8,8 @@ import (
 
 type WeWorkExternalContactFollow struct {
 	model.Model
-
-	ExternalUserId string `gorm:"comment:客户ID;column:external_user_id;unique" json:"external_user_id"`
+	UniId          string `gorm:"comment:客户ID+员工ID;column:uni_id;unique" json:"uni_id"`
+	ExternalUserId string `gorm:"comment:客户ID;column:external_user_id" json:"external_user_id"`
 	UserId         string `gorm:"comment:员工ID;column:user_id" json:"user_id"`
 	Remark         string `gorm:"comment:备注;column:remark" json:"remark"`
 	Description    string `gorm:"comment:描述;column:description" json:"description"`

@@ -33,6 +33,9 @@ func NewCreateSceneActivitiesLogic(ctx context.Context, svcCtx *svc.ServiceConte
 //
 func (active *CreateSceneActivitiesLogic) CreateSceneActivities(opt *types.ActionActiveRequest) (resp *types.StateReply, err error) {
 
+	if opt.ActionSceneQrcode.MemberMaxLimit == 0 {
+		opt.ActionSceneQrcode.MemberMaxLimit = 400
+	}
 	err = active.svcCtx.PowerX.Scene.Svc.CreateActivities(active.ctx, opt)
 
 	return &types.StateReply{

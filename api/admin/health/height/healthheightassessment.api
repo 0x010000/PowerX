@@ -1,0 +1,82 @@
+syntax = "v1"
+
+info(
+    title: "评估管理"
+    desc: "评估管理"
+    author: "Eros"
+    email: "smoke.mvp@gmail.com"
+    version: "v1"
+)
+
+
+import "common.api"
+@server(
+    group: admin/health/assessment
+    prefix: /api/v1/admin/health/assessment
+    middleware: EmployeeJWTAuth
+)
+
+service PowerX {
+    @doc "创建客户评估报告"
+    @handler CreateHealthHeightArchivesAssessment
+    post /create (ActionHealthHeightArchivesAssessmentRequest) returns (StateHealthReply)
+
+    @doc "更新客户评估报告"
+    @handler UpdateHealthHeightArchivesAssessment
+    patch /update (ActionHealthHeightArchivesAssessmentRequest) returns (StateHealthReply)
+
+    @doc "获取报告分页/page"
+    @handler ListHealthHeightArchivesAssessment
+    post /page (ListHealthHeightArchivesAssessmentRequest) returns (AssessmentListReply)
+
+    @doc "获取指定评估报告"
+    @handler DetailHealthHeightArchivesAssessment
+    get /:pid (PathRequest) returns (AssessmentReply)
+}
+
+
+
+
+type (
+    ActionHealthHeightArchivesAssessmentRequest struct {
+        HeathHeightArchives *Archives `json:"heathHeightArchives,optional"`
+        HeathHeightAssessment *Assessment `json:"heathHeightAssessment,optional"`
+    }
+
+    ListHealthHeightArchivesAssessmentRequest struct {
+        Pid string `json:"pid,optional"`
+        Oid string `json:"oid,optional"`
+        PageIndex int `form:"pageIndex,optional"`
+        PageSize int `form:"pageSize,optional"`
+    }
+
+
+)
+
+type (
+    AssessmentListReply {
+        List []*AssessmentReply `json:"list"`
+        PageIndex int `json:"pageIndex"`
+        PageSize int `json:"pageSize"`
+        Total int64 `json:"total"`
+    }
+
+    AssessmentReply struct {
+        HeathHeightArchives *Archives `json:"heathHeightArchives,optional"` // 档案信息
+        HeathHeightAssessment *Assessment `json:"heathHeightAssessment,optional"` // 评估信息
+        AssessmentStatisticsIndex *AssessmentStatisticsIndex `json:"assessmentStatisticsIndex,optional"` // 评估报告
+    }
+
+    AssessmentStatisticsIndex struct {
+
+    }
+)
+
+
+
+type (
+    PathRequest struct {
+        Pid string `path:"pid"`                                            // pid
+    }
+)
+

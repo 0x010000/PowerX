@@ -22,7 +22,7 @@ type SceneQrcode struct {
 	ExpiryDate         int64  `gorm:"comment:有效期截止日;column:expiry_date" json:"expiry_date"`
 	IsAutoActive       bool   `gorm:"comment:是否自动打开二维码/保留字段;column:is_auth_active" json:"is_auth_active"`
 	Cpa                int    `gorm:"comment:打开次数;column:cpa" json:"cpa"`
-	UnionId            string `gorm:"comment:绑定ID(群ID,团ID...);column:union_id" json:"union_id"`
+	UnifyId            string `gorm:"comment:绑定ID(群ID,团ID...);column:unify_id" json:"unify_id"`
 	//
 	ActiveQrcodeLink string `gorm:"comment:活码图,方便后续嵌入媒资文章;column:active_qrcode_link" json:"active_qrcode_link"`
 	State            int    `gorm:"comment:状态1:启用 2:禁用 3:删除;column:state" json:"state"`

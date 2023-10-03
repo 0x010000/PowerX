@@ -1,0 +1,152 @@
+syntax = "v1"
+
+info(
+    title: "方案管理"
+    desc: "方案管理"
+    author: "Eros"
+    email: "smoke.mvp@gmail.com"
+    version: "v1"
+)
+import "common.api"
+
+
+@server(
+    group: admin/health/cases
+    prefix: /api/v1/admin/health/cases
+    middleware: EmployeeJWTAuth
+)
+
+service PowerX {
+    @doc "方案列表/page"
+    @handler ListHealthHeightCasePage
+    post /page (HealthHeightCaseListRequest) returns (HealthHeightCaseListReply)
+
+    @doc "创建方案"
+    @handler CreateHealthHeightCase
+    post /create (HealthHeightCase) returns (StateHealthReply)
+
+    @doc "编辑方案"
+    @handler UpdateHealthHeightCase
+    patch /update/:pid (HealthHeightCase) returns (StateHealthReply)
+}
+
+
+
+
+
+type (
+    HealthHeightCaseListRequest {
+        Oid string `json:"oid,optional"`                                              //档案ID
+        Pid string `json:"pid,optional"`                                              //评估ID
+        Cid string `json:"cid,optional"`                                              //方案ID
+        PageIndex int `form:"pageIndex,optional"`
+        PageSize int `form:"pageSize,optional"`
+    }
+
+    HealthHeightCaseListReply {
+        List []*ListHealthHeightCaseInfo `json:"list"`
+        PageIndex int `json:"pageIndex"`
+        PageSize int `json:"pageSize"`
+        Total int64 `json:"total"`
+    }
+
+    HealthHeightCase struct {
+        Oid string `json:"oid"`                                                                                                              //档案ID
+        Pid string `json:"pid,optional"`                                                                                                     //评估ID
+        Cid string `path:"cid,optional"`                                                                                                     //方案ID(编辑可用)
+        HeathHeightArchivesCase HeathHeightArchivesCase `json:"heathHeightArchivesCase,optional"`                                            //档案
+        HeathHeightCaseBone HeathHeightCaseBone `json:"heathHeightCaseBone,optional"`                                                        //骨龄
+        HeathHeightCaseNourishment HeathHeightCaseNourishment `json:"heathHeightCaseNourishment,optional"`                                   //药物
+        HeathHeightCaseMeal HeathHeightCaseMeal `json:"heathHeightCaseMeal,optional"`                                                        //食物
+        HeathHeightCaseSport HeathHeightCaseSport `json:"heathHeightCaseSport,optional"`                                                     //运动
+        HeathHeightCaseSleep HeathHeightCaseSleep `json:"heathHeightCaseSleep,optional"`                                                     //睡眠
+        HeathHeightCaseEmotion HeathHeightCaseEmotion `json:"heathHeightCaseEmotion,optional"`                                               //情绪
+    }
+
+    ListHealthHeightCaseInfo struct {
+        Oid string `json:"oid"`                                                                                                              //档案ID
+        Pid string `json:"pid,optional"`                                                                                                     //评估ID
+        Cid string `path:"cid,optional"`                                                                                                     //方案ID(编辑可用)
+        HeathHeightArchivesCase HeathHeightArchivesCase `json:"heathHeightArchivesCase,optional"`                                            //档案
+        HeathHeightCaseBone HeathHeightCaseBone `json:"heathHeightCaseBone,optional"`                                                        //骨龄
+        HeathHeightCaseNourishment HeathHeightCaseNourishment `json:"heathHeightCaseNourishment,optional"`                                   //药物
+        HeathHeightCaseMeal HeathHeightCaseMeal `json:"heathHeightCaseMeal,optional"`                                                        //食物
+        HeathHeightCaseSport HeathHeightCaseSport `json:"heathHeightCaseSport,optional"`                                                     //运动
+        HeathHeightCaseSleep HeathHeightCaseSleep `json:"heathHeightCaseSleep,optional"`                                                     //睡眠
+        HeathHeightCaseEmotion HeathHeightCaseEmotion `json:"heathHeightCaseEmotion,optional"`                                               //情绪
+
+        Archives Archives `json:"archives,optional"`                                                                                         //档案信息
+        Assessment Assessment `json:"assessment"`                                                                                            //方案信息
+    }
+        // 档案
+    HeathHeightArchivesCase {
+        Diagnostic string `json:"diagnostic,optional"`                                                              //诊断情况
+    }
+        // 骨龄
+    HeathHeightCaseBone struct {
+        HeathHeightCaseBoneWithMenu []*HeathHeightCaseBoneWithMenu `json:"heathHeightCaseBoneWithMenu,optional"`
+    }
+    HeathHeightCaseBoneWithMenu struct {
+        ExpectHeightYear int `json:"expectHeightYear,optional"`  //期望年身高
+        ExpectHeightMonth int `json:"expectHeightMonth,optional"`//期望月身高
+        BoneAge int `json:"boneAge,optional"`                    //骨龄
+        ControlHeight int `json:"controlHeight,optional"`        //控制身高cm
+        ControlWeight int `json:"controlWeight,optional"`        //控制体重kg
+    }
+        // 药物
+    HeathHeightCaseNourishment struct {
+        HeathHeightCaseNourishmentWithMenu []*HeathHeightCaseNourishmentWithMenu `json:"heathHeightCaseNourishmentWithMenu,optional"` // 清单
+    }
+    HeathHeightCaseNourishmentWithMenu struct {
+        Name string `json:"name,optional"`                        //营养名称
+        Number int `json:"number,optional"`                       //数量
+        Units string `json:"units,optional"`                      //单位
+        Remark string `json:"remark,optional"`                    //备注
+        Gid int `json:"gid,optional"`                             //产品品牌型号ID(暂时不使用)
+    }
+
+        // 食物
+    HeathHeightCaseMeal struct {
+        HeathHeightCaseMealWithMenu []*HeathHeightCaseMealWithMenu `json:"heathHeightCaseMealWithMenu,optional"`       // 清单
+        HeathHeightCaseMealWithControl HeathHeightCaseMealWithControl `json:"heathHeightCaseMealWithControl,optional"` //
+    }
+    HeathHeightCaseMealWithMenu struct {
+        Name string `json:"name,optional"`                        //食物名称
+        Remark string `json:"remark,optional"`                    //备注
+        Gid int `json:"gid,optional"`                             //产品品牌型号ID(暂时不使用)
+    }
+    HeathHeightCaseMealWithControl struct {
+        ControlLess string `json:"controlLess,optional"`                        //少使用
+        ControlNonuse string `json:"controlNonuse,optional"`                    //不使用
+        ControlBreakfast string `json:"controlBreakfast,optional"`              //早餐
+        ControlLunch string `json:"controlLunch,optional"`                      //午餐
+        ControlDinner string `json:"controlDinner,optional"`                    //晚餐
+        ControlMealMinute string `json:"controlMealMinute,optional"`            //进餐时长
+    }
+        // 运动
+    HeathHeightCaseSport struct {
+        HeathHeightCaseSportWithMenu []*HeathHeightCaseSportWithMenu `json:"heathHeightCaseSportWithMenu,optional"`
+        HeathHeightCaseSportWithOther HeathHeightCaseSportWithOther `json:"heathHeightCaseSportWithOther,optional"`
+    }
+    HeathHeightCaseSportWithMenu struct {
+        Name string `gorm:"comment:名称;column:name" json:"name"`       //名称
+        Number int `gorm:"comment:运动量;column:number" json:"number"`  //运动量
+        Units string `gorm:"comment:单位;column:units" json:"units"`    //单位
+        Remark string `gorm:"comment:备注;column:remark" json:"remark"` //备注
+        Gid int `json:"gid,optional"`                                   //产品品牌型号ID(暂时不使用)
+    }
+    HeathHeightCaseSportWithOther struct {
+        Remark string `gorm:"comment:备注;column:remark" json:"remark"` //备注
+    }
+
+        // 睡眠
+    HeathHeightCaseSleep struct {
+        Remark string `json:"remark,optional"`//睡眠
+    }
+        // 情绪管理
+    HeathHeightCaseEmotion struct {
+        Remark string `json:"remark,optional"` //情绪管理
+    }
+)
+
+

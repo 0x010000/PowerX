@@ -37,6 +37,9 @@ func (active *UpdateSceneActivitiesLogic) UpdateSceneActivities(opt *types.Actio
 	if opt.Aid == 0 {
 		return resp, errorx.ErrBadRequest
 	}
+	if opt.ActionSceneQrcode.MemberMaxLimit == 0 {
+		opt.ActionSceneQrcode.MemberMaxLimit = 400
+	}
 	err = active.svcCtx.PowerX.Scene.Svc.UpdateActivities(active.ctx, opt)
 
 	return &types.StateReply{

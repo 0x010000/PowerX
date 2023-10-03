@@ -1,0 +1,443 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "档案管理",
+    "description": "档案管理",
+    "version": "v1"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/admin/health/archives/options": {
+      "get": {
+        "summary": "档案列表/option",
+        "operationId": "ListHealthHeightArchivesOption",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/HealthHeightArchivesOptionReply"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "admin/health/archives"
+        ]
+      }
+    },
+    "/api/v1/admin/health/archives/page": {
+      "post": {
+        "summary": "档案列表/page",
+        "operationId": "ListHealthHeightArchivesPage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/HealthHeightArchivesListReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HealthHeightArchivesListRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "admin/health/archives"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "Archives": {
+      "type": "object",
+      "properties": {
+        "oid": {
+          "type": "string",
+          "description": "档案ID"
+        },
+        "name": {
+          "type": "string",
+          "description": "名称"
+        },
+        "desc": {
+          "type": "string",
+          "description": "描述"
+        },
+        "externalUserId": {
+          "type": "string",
+          "description": "客户ID(微信)"
+        },
+        "fatherHeight": {
+          "type": "integer",
+          "format": "int32",
+          "description": "父亲身高"
+        },
+        "fatherWeight": {
+          "type": "integer",
+          "format": "int32",
+          "description": "父亲体重"
+        },
+        "motherHeight": {
+          "type": "integer",
+          "format": "int32",
+          "description": "母亲身高"
+        },
+        "motherWeight": {
+          "type": "integer",
+          "format": "int32",
+          "description": "母亲体重"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int32",
+          "description": "性别1: 男 2: 女 3: 保密"
+        },
+        "age": {
+          "type": "number",
+          "format": "double",
+          "description": "年龄"
+        },
+        "birth": {
+          "type": "integer",
+          "format": "int64",
+          "description": "出生时间"
+        },
+        "weight": {
+          "type": "integer",
+          "format": "int32",
+          "description": "体重KG"
+        },
+        "height": {
+          "type": "integer",
+          "format": "int32",
+          "description": "身高CM"
+        },
+        "gestationalWeeks": {
+          "type": "integer",
+          "format": "int32",
+          "description": "孕周"
+        },
+        "prevAssessmentTime": {
+          "type": "integer",
+          "format": "int64",
+          "description": "上一次诊断时间"
+        },
+        "nextAssessmentTime": {
+          "type": "integer",
+          "format": "int64",
+          "description": "下一次复诊时间"
+        },
+        "portrait": {
+          "type": "string",
+          "description": "头像"
+        },
+        "orgId": {
+          "type": "integer",
+          "format": "int32",
+          "description": "组织机构ID"
+        },
+        "userId": {
+          "type": "string",
+          "description": "医生ID"
+        },
+        "state": {
+          "type": "integer",
+          "format": "int32",
+          "description": "状态1:启用 2：禁用"
+        },
+        "lastPid": {
+          "type": "string",
+          "description": "最后评估报告ID"
+        },
+        "heathHeightArchivesGuardian": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ArchivesGuardian"
+          },
+          "description": "联系人"
+        }
+      },
+      "title": "Archives",
+      "required": [
+        "name",
+        "fatherHeight",
+        "fatherWeight",
+        "motherHeight",
+        "motherWeight",
+        "gender",
+        "age",
+        "birth"
+      ]
+    },
+    "ArchivesGuardian": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "监护人姓名"
+        },
+        "relation": {
+          "type": "string",
+          "description": "与被监护人关系"
+        },
+        "mobile": {
+          "type": "string",
+          "description": "监护人手机号"
+        }
+      },
+      "title": "ArchivesGuardian"
+    },
+    "Assessment": {
+      "type": "object",
+      "properties": {
+        "pid": {
+          "type": "string",
+          "description": " 评估ID"
+        },
+        "age": {
+          "type": "integer",
+          "format": "int32",
+          "description": "年龄"
+        },
+        "nowHeight": {
+          "type": "integer",
+          "format": "int32",
+          "description": "现在身高CM"
+        },
+        "nowHeightCycleRatio": {
+          "type": "number",
+          "format": "double",
+          "description": "现在身高周期比"
+        },
+        "nowWeight": {
+          "type": "integer",
+          "format": "int32",
+          "description": "现在体重KG"
+        },
+        "nowWeightCycleRatio": {
+          "type": "number",
+          "format": "double",
+          "description": "现在体重周期比"
+        },
+        "bmi": {
+          "type": "integer",
+          "format": "int32",
+          "description": "bmi"
+        },
+        "bmiCycleRatio": {
+          "type": "number",
+          "format": "double",
+          "description": "BMI周期比"
+        },
+        "abdominalGirth": {
+          "type": "integer",
+          "format": "int32",
+          "description": "腹围CM"
+        },
+        "expectGeight": {
+          "type": "integer",
+          "format": "int32",
+          "description": "期望身高CM"
+        },
+        "expectHeightCycleRatio": {
+          "type": "number",
+          "format": "double",
+          "description": "期望身高周期比"
+        },
+        "estimateHeight": {
+          "type": "integer",
+          "format": "int32",
+          "description": "估计身高CM"
+        },
+        "estimateHeightCycleRatio": {
+          "type": "number",
+          "format": "double",
+          "description": "估计身高周期比"
+        },
+        "bodyState": {
+          "type": "integer",
+          "format": "int32",
+          "description": "形体 1:形体偏低 2:匀称超重 3:轻度肥胖 4:中度肥胖 5:重度肥胖"
+        },
+        "growthState": {
+          "type": "integer",
+          "format": "int32",
+          "description": "成长状态1:未发育 2:已发育"
+        },
+        "isFirst": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "是否首次评估"
+        },
+        "analysis": {
+          "type": "string",
+          "description": "情况分析"
+        },
+        "revaluateName": {
+          "type": "string",
+          "description": "测量人"
+        },
+        "revaluateTime": {
+          "type": "integer",
+          "format": "int64",
+          "description": "评估时间"
+        }
+      },
+      "title": "Assessment"
+    },
+    "HealthHeightArchivesListReply": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Archives"
+          }
+        },
+        "pageIndex": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "HealthHeightArchivesListReply",
+      "required": [
+        "list",
+        "pageIndex",
+        "pageSize",
+        "total"
+      ]
+    },
+    "HealthHeightArchivesListRequest": {
+      "type": "object",
+      "properties": {
+        "externalUserId": {
+          "type": "string",
+          "description": "外部用户ID"
+        },
+        "oid": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": "档案ID"
+        },
+        "mobile": {
+          "type": "string",
+          "description": "手机号"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int32",
+          "description": "性别"
+        },
+        "orgId": {
+          "type": "integer",
+          "format": "int32",
+          "description": "组织机构ID"
+        },
+        "userId": {
+          "type": "string",
+          "description": "医生ID"
+        },
+        "nextAssessmentTime": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "description": "下一次复诊时间"
+        },
+        "pageIndex": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "HealthHeightArchivesListRequest"
+    },
+    "HealthHeightArchivesOptionReply": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Option"
+          }
+        }
+      },
+      "title": "HealthHeightArchivesOptionReply",
+      "required": [
+        "list"
+      ]
+    },
+    "Option": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "Option",
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "StateHealthReply": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "StateHealthReply",
+      "required": [
+        "status"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "apiKey": []
+    }
+  ]
+}

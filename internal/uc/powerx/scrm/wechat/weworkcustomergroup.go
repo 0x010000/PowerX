@@ -22,7 +22,7 @@ import (
 func (this *wechatUseCase) PullListWeWorkCustomerGroupRequest(opt *request.RequestGroupChatList, sync bool) (list []*response.GroupChat, err error) {
 
 	if !sync {
-		list = this.transferMapToCustomerGroups(this.getCustomerGroupFromKVByChatId())
+		list = transferMapToCustomerGroups(this.getCustomerGroupFromKVByChatId())
 		if list != nil {
 			return list, nil
 		}
@@ -136,11 +136,10 @@ func (this *wechatUseCase) getCustomerGroupFromKVByChatId(chatId ...string) (cha
 //
 // transferMapToCustomerGroups
 //  @Description:
-//  @receiver this
 //  @param chat
 //  @return chats
 //
-func (this *wechatUseCase) transferMapToCustomerGroups(chat map[string]string) (chats []*response.GroupChat) {
+func transferMapToCustomerGroups(chat map[string]string) (chats []*response.GroupChat) {
 
 	if chat != nil {
 		for _, val := range chat {
@@ -150,5 +149,27 @@ func (this *wechatUseCase) transferMapToCustomerGroups(chat map[string]string) (
 		}
 	}
 	return chats
+
+}
+
+//
+// GetCustomerGroupFromKVByChatId
+//  @Description:
+//  @receiver this
+//  @param chatID
+//  @param sync
+//  @return chat
+//
+func (this *wechatUseCase) GetCustomerGroupFromKVByChatId(chatID string, sync bool) (chat *response.GroupChat) {
+
+	chats := transferMapToCustomerGroups(this.getCustomerGroupFromKVByChatId(chatID))
+	if sync || chats == nil {
+		get, _ := this.wework.ExternalContactGroupChat.Get(this.ctx, chatID, 1)
+		if get.GroupChat != nil {
+			this.pushCustomerGroupToKV(get.GroupChat)
+		}
+		return get.GroupChat
+	}
+	return chats[0]
 
 }

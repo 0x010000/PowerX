@@ -54,7 +54,7 @@ type (
     Active struct {
         Activities Activities `json:"activities"`                                                                                        // 活动信息
         ActivitiesPoster Poster `json:"activitiesPoster"`                                                                                // 活动海报
-        ActivitiesSceneQrcode []*ActivitiesQrcode `json:"activitiesSceneQrcode"`                                                         // 活动场景码
+        ActivitiesSceneQrcode ActivitiesWithQrcode `json:"activitiesSceneQrcode"`                                                        // 活动场景码
         ActivitiesParticipants Participants `json:"activitiesParticipants"`                                                              // 参与概况
         ActivitiesContent interface{} `json:"ActivitiesContent"`                                                                         // 活动内容
     }
@@ -77,6 +77,7 @@ type (
         CoverLink string `json:"coverLink"`                                                    // 活动封面Link
         Link string `json:"link"`                                                              // 落地页(场景落地页;其他落地页)
         Position []string `json:"position"`                                                    // 落地页二维码位置100,200
+        MemberMaxLimit int `json:"memberMaxLimit,optional"`                                    // 单群，团最大限制数，自动切换下一个，至少保留一个
     }
 
     Participants struct {
@@ -91,7 +92,7 @@ type (
         Aid uint64 `path:"aid,optional"`                                            // aid
         Activities ActionActivities `json:"activities"`
         ActionPoster ActionPoster `json:"activitiesPoster"`
-        ActionSceneQrcode []ActivitiesQrcode `json:"activitiesSceneQrcode"`
+        ActionSceneQrcode ActivitiesWithQrcode `json:"activitiesSceneQrcode"`
     }
 
     ActionActivities struct {
@@ -114,6 +115,10 @@ type (
 )
 
 type (
+    ActivitiesWithQrcode struct {
+        MemberMaxLimit int `json:"memberMaxLimit,optional"`                                             // 单群，团最大限制数，自动切换下一个，至少保留一个
+        ActionSceneQrcode []*ActivitiesQrcode `json:"actionSceneQrcode"`
+    }
     ActivitiesQrcode struct {
         Qid string `json:"qid,optional"`   // 场景码Code
         Link string `json:"link,optional"` // 场景码Link
@@ -140,6 +145,7 @@ type (
         RealQrcodeLink string `json:"realQrcodeLink"`     // 真实码
         Platform int `json:"platform"`
         ActiveQrcodeLink string `json:"activeQrcodeLink"` // 场景码
-        State int `json:"state"`
+        State int `json:"state"`                          // 状态
+        UnifyId string `json:"unifyId"`                   // 群团ID
     }
 )

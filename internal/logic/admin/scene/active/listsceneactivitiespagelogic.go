@@ -90,9 +90,10 @@ func (active *ListSceneActivitiesPageLogic) DTO(data []*scene.SceneActivities) (
 func (active *ListSceneActivitiesPageLogic) dto(val *scene.SceneActivities) *types.Active {
 
 	return &types.Active{
-		Activities:             active.activities(val),
-		ActivitiesPoster:       active.activitiesPoster(val),
-		ActivitiesSceneQrcode:  active.activitiesSceneQrcode(val.ActiveGroupQrcode),
+		Activities:       active.activities(val),
+		ActivitiesPoster: active.activitiesPoster(val),
+		ActivitiesSceneQrcode: types.ActivitiesWithQrcode{
+			MemberMaxLimit: val.MemberMaxLimit, ActionSceneQrcode: active.activitiesSceneQrcode(val.ActiveGroupQrcode)},
 		ActivitiesParticipants: active.activitiesParticipants(val.ActiveParticipants),
 		ActivitiesContent:      nil,
 	}

@@ -1,0 +1,76 @@
+syntax = "v1"
+
+
+
+
+
+
+type (
+    Archives {
+        Oid string `json:"oid,optional"`                                                                                          //档案ID
+        Name string `json:"name"`                                                                                                 //名称
+        Desc string `json:"desc,optional"`                                                                                        //描述
+        ExternalUserId string `json:"externalUserId,optional"`                                                                    //客户ID(微信)
+        FatherHeight int `json:"fatherHeight"`                                                                                    //父亲身高
+        FatherWeight int `json:"fatherWeight"`                                                                                    //父亲体重
+        MotherHeight int `json:"motherHeight"`                                                                                    //母亲身高
+        MotherWeight int `json:"motherWeight"`                                                                                    //母亲体重
+        Gender int `json:"gender"`                                                                                                //性别1: 男 2: 女 3: 保密
+        Age float64 `json:"age"`                                                                                                  //年龄
+        Birth int64 `json:"birth"`                                                                                                //出生时间
+        Weight int `json:"weight,optional"`                                                                                       //体重KG
+        Height int `json:"height,optional"`                                                                                       //身高CM
+        GestationalWeeks int `json:"gestationalWeeks,optional"`                                                                   //孕周
+        PrevAssessmentTime uint64 `json:"prevAssessmentTime,optional"`                                                            //上一次诊断时间
+        NextAssessmentTime uint64 `json:"nextAssessmentTime,optional"`                                                            //下一次复诊时间
+        Portrait string `json:"portrait,optional"`                                                                                //头像
+        OrgId int `json:"orgId,optional"`                                                                                         //组织机构ID
+        UserId string `json:"userId,optional"`                                                                                    //医生ID
+        State int `json:"state,optional"`                                                                                         //状态1:启用 2：禁用
+        LastPid string `json:"lastPid,optional"`                                                                                     //最后评估报告ID
+        HeathHeightArchivesGuardian []*ArchivesGuardian `json:"heathHeightArchivesGuardian,optional"`                             //联系人
+    }
+
+    ArchivesGuardian struct {
+        Name string `json:"name,optional"`        //监护人姓名
+        Relation string `json:"relation,optional"`//与被监护人关系
+        Mobile string `json:"mobile,optional"`    //监护人手机号
+    }
+
+
+)
+
+type (
+    Assessment struct {
+        Pid string `json:"pid,optional"`                                                         // 评估ID
+        Age int `json:"age,optional"`                                                            //年龄
+        NowHeight int `json:"nowHeight,optional"`                                                //现在身高CM
+        NowHeightCycleRatio float64 `json:"nowHeightCycleRatio,optional"`                        //现在身高周期比
+        NowWeight int `json:"nowWeight,optional"`                                                //现在体重KG
+        NowWeightCycleRatio float64 `json:"nowWeightCycleRatio,optional"`                        //现在体重周期比
+        BMI int `json:"bmi,optional"`                                                            //bmi
+        BMICycleRatio float64 `json:"bmiCycleRatio,optional"`                                    //BMI周期比
+        AbdominalGirth int `json:"abdominalGirth,optional"`                                      //腹围CM
+        ExpectHeight int `json:"expectGeight,optional"`                                          //期望身高CM
+        ExpectHeightCycleRatio float64 `json:"expectHeightCycleRatio,optional"`                  //期望身高周期比
+        EstimateHeight int `json:"estimateHeight,optional"`                                      //估计身高CM
+        EstimateHeightCycleRatio float64 `json:"estimateHeightCycleRatio,optional"`              //估计身高周期比
+        BodyState int `json:"bodyState,optional"`                                                //形体 1:形体偏低 2:匀称超重 3:轻度肥胖 4:中度肥胖 5:重度肥胖
+        GrowthState int `json:"growthState,optional"`                                            //成长状态1:未发育 2:已发育
+        IsFirst bool `json:"isFirst,optional"`                                                   //是否首次评估
+        Analysis string `json:"analysis,optional"`                                               //情况分析
+        RevaluateName string `json:"revaluateName,optional"`                                     //测量人
+        RevaluateTime int64 `json:"revaluateTime,optional"`                                      //评估时间
+    }
+)
+
+
+type (
+    StateHealthReply {
+        Status string `json:"status"`
+    }
+    Option {
+        Id string `json:"id"`
+        Name string `json:"name"`
+    }
+)

@@ -63,6 +63,21 @@ func (this wechatUseCase) FindManyWeWorkCustomerPage(ctx context.Context, opt *t
 }
 
 //
+// FindManyWeWorkCustomerOption
+//  @Description:
+//  @receiver this
+//  @param ctx
+//  @return []*customer.WeWorkExternalContacts
+//  @return error
+//
+func (this wechatUseCase) FindManyWeWorkCustomerOption(ctx context.Context) ([]*customer.WeWorkExternalContacts, error) {
+
+	contacts := this.modelWeworkCustomer.custom.Query(ctx, this.db)
+	return contacts, nil
+
+}
+
+//
 // buildFindManyCustomerQueryNoPage
 //  @Description:
 //  @param query
@@ -119,15 +134,20 @@ func (this wechatUseCase) PullListWeWorkCustomerRequest(userID ...string) ([]*re
 	}
 	contacts := []customer.WeWorkExternalContacts{}
 	follows := []customer.WeWorkExternalContactFollow{}
-
+	skip := make(map[string]interface{})
 	for _, val := range info.ExternalContactList {
+		if _, ok := skip[val.ExternalContact.ExternalUserID]; ok {
+			continue
+		} else {
+			skip[val.ExternalContact.ExternalUserID] = 1
+		}
 		contacts = append(contacts, transferExternalContactToModel(val.ExternalContact, val.FollowInfo.UserID))
 		follows = append(follows, transferExternalContactFollowToModel(val.FollowInfo, val.ExternalContact.ExternalUserID))
 	}
 	err = this.db.Clauses(
 		clause.OnConflict{Columns: []clause.Column{{Name: `external_user_id`}}, UpdateAll: true}).CreateInBatches(&contacts, 100).Error
 	err = this.db.Clauses(
-		clause.OnConflict{Columns: []clause.Column{{Name: `external_user_id`}}, UpdateAll: true}).CreateInBatches(&follows, 100).Error
+		clause.OnConflict{Columns: []clause.Column{{Name: `uni_id`}}, UpdateAll: true}).CreateInBatches(&follows, 100).Error
 	if err != nil {
 		logx.Errorf(`scrm.wework.customer.contract.error. %v`, err)
 	}
@@ -180,6 +200,7 @@ func transferExternalContactFollowToModel(follow *models.FollowUser, externalUse
 	tags, _ := json.Marshal(follow.Tags)
 	remarkMobiles, _ := json.Marshal(follow.RemarkMobiles)
 	return customer.WeWorkExternalContactFollow{
+		UniId:          fmt.Sprintf(`%s.%s`, externalUserID, follow.UserID),
 		ExternalUserId: externalUserID,
 		UserId:         follow.UserID,
 		Remark:         follow.Remark,

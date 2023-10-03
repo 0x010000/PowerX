@@ -1,0 +1,65 @@
+syntax = "v1"
+
+info(
+    title: "标准管理"
+    desc: "标准管理"
+    author: "Eros"
+    email: "smoke.mvp@gmail.com"
+    version: "v1"
+)
+import "common.api"
+@server(
+    group: admin/health/common
+    prefix: /api/v1/admin/health/common
+    middleware: EmployeeJWTAuth
+)
+
+service PowerX {
+    @doc "标准身高体重表/option"
+    @handler ListHealthHeightStandardOption
+    post /options (HealthHeightStandardListRequest) returns (HealthHeightStandardOptionReply)
+}
+
+
+
+
+
+type (
+    HealthHeightStandardListRequest {
+        Gender int `json:"gender,optional"`
+    }
+
+    HealthHeightStandardListReply {
+        Age int `json:"age"`
+        Old string `json:"old"`
+        Gender int `json:"gender"`
+        HP03 float64 `json:"hp03"`
+        HP10 float64 `json:"hp10"`
+        HP25 float64 `json:"hp25"`
+        HP50 float64 `json:"hp50"`
+        HP75 float64 `json:"hp75"`
+        HP90 float64 `json:"hp90"`
+        HP97 float64 `json:"hp97"`
+        WP03 float64 `json:"wp03"`
+        WP10 float64 `json:"wp10"`
+        WP25 float64 `json:"wp25"`
+        WP50 float64 `json:"wp50"`
+        WP75 float64 `json:"wp75"`
+        WP90 float64 `json:"wp90"`
+        WP97 float64 `json:"wp97"`
+        BP03 float64 `json:"bp03"`
+        BP10 float64 `json:"bp10"`
+        BP25 float64 `json:"bp25"`
+        BP50 float64 `json:"bp50"`
+        BP75 float64 `json:"bp75"`
+        BP90 float64 `json:"bp90"`
+        BP97 float64 `json:"bp97"`
+        HM float64 `json:"hm"` //身高平均值
+        HL float64 `json:"hl"` //身高偏差值
+    }
+)
+type (
+    HealthHeightStandardOptionReply {
+        List []*HealthHeightStandardListReply `json:"list"`
+    }
+)

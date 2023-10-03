@@ -1,0 +1,58 @@
+syntax = "v1"
+
+info(
+    title: "档案管理"
+    desc: "档案管理"
+    author: "Eros"
+    email: "smoke.mvp@gmail.com"
+    version: "v1"
+)
+import "common.api"
+@server(
+    group: admin/health/archives
+    prefix: /api/v1/admin/health/archives
+    middleware: EmployeeJWTAuth
+)
+
+service PowerX {
+    @doc "档案列表/page"
+    @handler ListHealthHeightArchivesPage
+    post /page (HealthHeightArchivesListRequest) returns (HealthHeightArchivesListReply)
+
+    @doc "档案列表/option"
+    @handler ListHealthHeightArchivesOption
+    get /options  returns (HealthHeightArchivesOptionReply)
+}
+
+
+
+
+
+type (
+    HealthHeightArchivesListRequest {
+        ExternalUserId string `json:"externalUserId,optional"`              //外部用户ID
+        Oid []int `json:"oid,optional"`                                     //档案ID
+        Mobile string `json:"mobile,optional"`                              //手机号
+        Gender int `json:"gender,optional"`                                 //性别
+        OrgId int `json:"orgId,optional"`                                   //组织机构ID
+        UserId string `json:"userId,optional"`                              //医生ID
+        NextAssessmentTime []uint64 `json:"nextAssessmentTime,optional"`    //下一次复诊时间
+        PageIndex int `form:"pageIndex,optional"`
+        PageSize int `form:"pageSize,optional"`
+    }
+
+    HealthHeightArchivesListReply {
+        List []*Archives `json:"list"`
+        PageIndex int `json:"pageIndex"`
+        PageSize int `json:"pageSize"`
+        Total int64 `json:"total"`
+    }
+
+
+)
+type (
+    HealthHeightArchivesOptionReply {
+        List []*Option `json:"list"`
+    }
+
+)

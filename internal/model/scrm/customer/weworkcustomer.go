@@ -2,6 +2,8 @@ package customer
 
 import (
 	"PowerX/internal/model"
+	"PowerX/internal/module/auth"
+	"context"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -9,7 +11,7 @@ import (
 type WeWorkExternalContacts struct {
 	model.Model
 	WeWorkExternalContactFollow WeWorkExternalContactFollow `gorm:"foreignKey:ExternalUserId;references:external_user_id" json:"WeWorkExternalContactFollow"`
-	ExternalUserId              string                      `gorm:"comment:客户ID;unique;not null;" json:"externalUserId"`
+	ExternalUserId              string                      `gorm:"comment:客户ID;unique;not null;column:external_user_id" json:"external_user_id"`
 	AppId                       string                      `gorm:"comment:应用ID;index:idx_app_id;column:app_id" json:"appId"`
 	CorpId                      string                      `gorm:"comment:企业ID;index:idx_corp_id;column:corp_id" json:"corpId"`
 	OpenId                      string                      `gorm:"comment:开放ID;index:idx_customer_open_id;column:open_id;" json:"openId"`
@@ -46,9 +48,12 @@ func (e WeWorkExternalContacts) TableName() string {
 //  @param db
 //  @return contacts
 //
-func (e WeWorkExternalContacts) Query(db *gorm.DB) (contacts []*WeWorkExternalContacts) {
-
-	err := db.Model(e).Find(&contacts).Error
+func (e WeWorkExternalContacts) Query(ctx context.Context, db *gorm.DB) (contacts []*WeWorkExternalContacts) {
+	db = db.Model(e).WithContext(ctx)
+	if v := auth.Authorization(ctx); v.App != nil && v.AID != `` {
+		db = db.Where(`user_id = ?`, v)
+	}
+	err := db.Find(&contacts).Error
 	if err != nil {
 		panic(err)
 	}

@@ -54,14 +54,11 @@ func (active *ActionSceneActivitiesDetailLogic) ActionSceneActivitiesDetail(opt 
 		TaskState:      0,
 	}
 	// qrcode
-	if qrcode := detail.ActiveGroupQrcode; qrcode != nil {
-		// select userId in customer group
-		user := active.svcCtx.PowerX.SCRM.Wechat.GetCustomerGroupFromKVByUserId(qrcode[0].SceneQrcode.UnionId, opt.UserId)
-		//user := wechat.Scrm.GetCustomerGroupFromKVByUserId(qrcode[0].SceneQrcode.UnionId, opt.UserId)
-		if user != `` {
-			resp.State = true
+	if qrcode := resp.ActivitiesSceneQrcode; qrcode != nil {
+		resp.State = active.rule(participant, qrcode, detail.MemberMaxLimit)
+		if participant.UnifyId == `` {
+			participant.UnifyId = qrcode[0].UnifyId
 		}
-		participant.CustomerGroupId = qrcode[0].SceneQrcode.UnionId
 	}
 	// one task with only userId
 	if detail.ActiveParticipants != nil {
@@ -73,6 +70,40 @@ func (active *ActionSceneActivitiesDetailLogic) ActionSceneActivitiesDetail(opt 
 	}
 
 	return resp, err
+}
+
+//
+// rule
+//  @Description:
+//  @receiver active
+//  @param participant
+//  @param qrcode
+//  @param max
+//  @return state
+//
+func (active *ActionSceneActivitiesDetailLogic) rule(participant *scene.SceneActivitiesParticipants, qrcode []*types.ActivitiesQrcodeWeb, max int) (state bool) {
+
+	for i, code := range qrcode {
+		chat := active.svcCtx.PowerX.SCRM.Wechat.GetCustomerGroupFromKVByChatId(code.UnifyId, true)
+		if chat == nil {
+			return state
+		}
+		// delete group overstep memberMaxLimit
+		if len(chat.MemberList) > max {
+			if len(qrcode) > 1 {
+				qrcode = append(qrcode[:i], qrcode[i+1:]...)
+			}
+		}
+		// select valid userId
+		for _, member := range chat.MemberList {
+			if member.UserID == participant.UserId {
+				participant.UnifyId = code.UnifyId
+				participant.UserName = member.Name
+				state = true
+			}
+		}
+	}
+	return state
 }
 
 //
@@ -178,7 +209,7 @@ func (active *ActionSceneActivitiesDetailLogic) activitiesSceneQrcode(sceneQrcod
 			qrcode = append(qrcode, &types.ActivitiesQrcodeWeb{
 				Qid:     val.Qid,
 				Link:    val.Link,
-				UnionId: val.SceneQrcode.UnionId,
+				UnifyId: val.SceneQrcode.UnifyId,
 			})
 		}
 	}

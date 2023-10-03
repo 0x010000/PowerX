@@ -115,8 +115,9 @@ func (qrcode *ListWeWorkQrcodePageLogic) dto(obj *scene.SceneQrcode) *types.WeWo
 		SafeThresholdValue: obj.SafeThresholdValue,
 		ExpiryDate:         obj.ExpiryDate,
 		ExpiryState:        int(obj.ExpiryDate - time.Now().Unix()),
+		State:              obj.State,
 		ActiveQrcodeLink:   obj.ActiveQrcodeLink,
 		CPA:                obj.Cpa,
-		State:              obj.State,
+		UnifyId:            obj.UnifyId,
 	}
 }

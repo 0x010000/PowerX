@@ -27,6 +27,11 @@ type SceneActivities struct {
 	PhotoState          bool      `gorm:"comment:是否启用头像;column:photo_state" json:"photo_state"`
 	AliseState          bool      `gorm:"comment:是否启用昵称;column:alise_state" json:"alise_state"`
 	//
+	//  PersonMaxLimit
+	//  @Description:
+	//
+	MemberMaxLimit int `gorm:"comment:人数限制;建议不要超过最大数的500 * 0.8 = 400;column:member_max_limit;" json:"member_max_limit"`
+	//
 	//  ActiveParticipants
 	//  @Description: active participants
 	//

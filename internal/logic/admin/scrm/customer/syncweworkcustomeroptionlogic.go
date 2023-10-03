@@ -34,7 +34,11 @@ func NewSyncWeWorkCustomerOptionLogic(ctx context.Context, svcCtx *svc.ServiceCo
 //	@return err
 func (cMsg *SyncWeWorkCustomerOptionLogic) SyncWeWorkCustomerOption(opt *types.WeWorkCustomersRequest) (resp *types.WechatListCustomersReply, err error) {
 
-	data, err := cMsg.svcCtx.PowerX.SCRM.Wechat.PullListWeWorkCustomerRequest(opt.UserId)
+	userId := []string{}
+	if opt.UserId != "" {
+		userId = append(userId, opt.UserId)
+	}
+	data, err := cMsg.svcCtx.PowerX.SCRM.Wechat.PullListWeWorkCustomerRequest(userId...)
 
 	return &types.WechatListCustomersReply{
 		List: cMsg.DTO(data),

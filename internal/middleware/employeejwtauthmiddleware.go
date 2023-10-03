@@ -137,6 +137,8 @@ func (m *EmployeeJWTAuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFu
 		}
 		request = request.WithContext(m.px.AdminAuthorization.WithAuthMetadataCtxValue(request.Context(), &permission.AdminAuthMetadata{
 			UID: claims.UID,
+			AID: claims.Account,
+			App: claims.App,
 		}))
 		next(writer, request)
 	}

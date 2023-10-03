@@ -6,6 +6,7 @@ import (
 	"context"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/pkg/errors"
+	"strings"
 	"time"
 
 	"PowerX/internal/svc"
@@ -48,10 +49,14 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginReply, err
 	}
 
 	roles, _ := l.svcCtx.PowerX.AdminAuthorization.Casbin.GetRolesForUser(employee.Account)
-
+	var app []string
+	if employee.Position != nil {
+		app = strings.Split(employee.Position.App, `,`)
+	}
 	claims := types.TokenClaims{
 		UID:     employee.Id,
 		Account: employee.Account,
+		App:     app,
 		Roles:   roles,
 		RegisteredClaims: &jwt.RegisteredClaims{
 			Issuer:    "powerx",

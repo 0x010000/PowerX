@@ -2,6 +2,7 @@ package uc
 
 import (
 	"PowerX/internal/config"
+	"PowerX/internal/uc/powerx/health"
 	"fmt"
 	"github.com/golang-module/carbon/v2"
 	"gorm.io/gorm"
@@ -9,12 +10,15 @@ import (
 )
 
 type CustomUseCase struct {
-	db *gorm.DB
+	db     *gorm.DB
+	Health health.IhealthInterface
 }
 
 func NewCustomUseCase(conf *config.Config, pxUseCase *PowerXUseCase) (uc *CustomUseCase, clean func()) {
 
 	uc = &CustomUseCase{}
+	pxUseCase.db = pxUseCase.db.Debug()
+	uc.Health = health.Repo(pxUseCase.db, pxUseCase.redis)
 
 	// 需要打印当时系统的Timezone
 	uc.CheckSystemTimeZone()

@@ -181,7 +181,7 @@ func (this *wechatUseCase) employee(val response.DepartmentID) {
 		}
 		this.modelWeworkOrganization.employee.Action(this.db, employees)
 		// sync to local
-		//this.modelOrganization.employee.Action(this.db, this.employeeFromWeWorkSyncToLocal(employees))
+		this.modelOrganization.employee.Action(this.db, this.employeeFromWeWorkSyncToLocal(employees))
 
 	}
 
@@ -294,17 +294,23 @@ func (this *wechatUseCase) employeeFromWeWorkSyncToLocal(fromEmployee []*organiz
 		password, _ := origanzation.HashPassword(`123456`)
 		for _, employee := range fromEmployee {
 			toEmployee = append(toEmployee, &origanzation.Employee{
-				Account:  employee.WeWorkUserId,
-				Name:     employee.Name,
-				NickName: employee.Name,
+				Account:    employee.WeWorkUserId,
+				Name:       employee.Name,
+				NickName:   employee.Name,
+				Desc:       "",
+				PositionID: 1,
+				JobTitle:   employee.Position,
 				// todo Position 关联
-				DepartmentId:  int64(employee.WeWorkMainDepartmentId),
+				//DepartmentId:  int64(employee.WeWorkMainDepartmentId),
+				DepartmentId:  0,
 				MobilePhone:   employee.Mobile,
 				Gender:        employee.Gender,
 				Email:         employee.Email,
 				ExternalEmail: employee.Email,
 				Avatar:        employee.Avatar,
 				Password:      password,
+				IsReserved:    false,
+				IsActivated:   false,
 				WeWorkUserId:  employee.WeWorkUserId,
 			})
 		}

@@ -12,4 +12,5 @@ type Position struct {
 	Desc  string                  `gorm:"comment:描述;column:desc" json:"desc"`
 	Roles []*permission.AdminRole `gorm:"many2many:position_roles;foreignKey:Id;References:RoleCode" json:"roles"`
 	Level string                  `gorm:"comment:职级;column:level" json:"level"`
+	App   string                  `gorm:"comment:数据权限标记(1,2);column:app" json:"app"`
 }

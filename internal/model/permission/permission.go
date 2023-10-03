@@ -6,6 +6,8 @@ type AdminAuthMetadataKey struct{}
 
 type AdminAuthMetadata struct {
 	UID int64
+	AID string
+	App []string
 }
 
 type EmployeeCasbinPolicy struct {

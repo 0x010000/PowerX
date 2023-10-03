@@ -373,7 +373,7 @@
           "format": "int64",
           "description": " 有效期截止日(时间戳)"
         },
-        "unionId": {
+        "unifyId": {
           "type": "string",
           "description": " 绑定ID(群ID,团ID...)"
         }
@@ -456,6 +456,10 @@
           "type": "integer",
           "format": "int32",
           "description": " 活码打开次数"
+        },
+        "unifyId": {
+          "type": "string",
+          "description": " 团，群ID"
         }
       },
       "title": "WeWorkQrcodeActive",
@@ -473,7 +477,8 @@
         "expiryState",
         "state",
         "activeQrcodeLink",
-        "cpa"
+        "cpa",
+        "unifyId"
       ]
     }
   },

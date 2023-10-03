@@ -16,6 +16,24 @@
     "application/json"
   ],
   "paths": {
+    "/api/v1/admin/scrm/customer/wechat/option": {
+      "get": {
+        "summary": "我的客户列表/option",
+        "operationId": "ListWeWorkCustomerOption",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/WechatListCustomersOptionReply"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "admin/scrm/customer"
+        ]
+      }
+    },
     "/api/v1/admin/scrm/customer/wechat/page": {
       "post": {
         "summary": "所有客户列表/page",
@@ -164,6 +182,22 @@
       "title": "ExternalContactExternalProfileWithExternalProfile",
       "required": [
         "externalAttr"
+      ]
+    },
+    "OptionCustomer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "names": {
+          "type": "string"
+        }
+      },
+      "title": "OptionCustomer",
+      "required": [
+        "id",
+        "names"
       ]
     },
     "WeWorkCustomersRequest": {
@@ -379,6 +413,21 @@
         "openUserId",
         "addWay",
         "state"
+      ]
+    },
+    "WechatListCustomersOptionReply": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OptionCustomer"
+          }
+        }
+      },
+      "title": "WechatListCustomersOptionReply",
+      "required": [
+        "list"
       ]
     },
     "WechatListCustomersReply": {

@@ -23,6 +23,10 @@ service PowerX {
     @doc "所有客户列表/page"
     @handler ListWeWorkCustomerPage
     post /page (WeWorkCustomersRequest) returns (WechatListCustomersReply)
+
+    @doc "我的客户列表/option"
+    @handler ListWeWorkCustomerOption
+    get /option  returns (WechatListCustomersOptionReply)
 }
 
 
@@ -43,6 +47,13 @@ type (
         PageIndex int `json:"pageIndex"`
         PageSize int `json:"pageSize"`
         Total int64 `json:"total"`
+    }
+    WechatListCustomersOptionReply {
+        List []*OptionCustomer `json:"list"`
+    }
+    OptionCustomer {
+        Id string `json:"id"`
+        Names string `json:"names"`
     }
 )
 

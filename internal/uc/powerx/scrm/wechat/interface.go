@@ -126,6 +126,15 @@ type iWeWorkCustomerInterface interface {
 	//  @return error
 	//
 	PullListWeWorkCustomerRequest(userID ...string) ([]*customerResp.ResponseExternalContact, error)
+
+	//
+	// FindManyWeWorkCustomerOption
+	//  @Description:
+	//  @param ctx
+	//  @return []*customer.WeWorkExternalContacts
+	//  @return error
+	//
+	FindManyWeWorkCustomerOption(ctx context.Context) ([]*customer.WeWorkExternalContacts, error)
 	//
 	// PullListWeWorkCustomerGroupRequest
 	//  @Description:
@@ -165,6 +174,14 @@ type iWeWorkCustomerInterface interface {
 	//  @return interface{}
 	//
 	GetCustomerGroupFromKVByUserId(chatId, userId string) interface{}
+	//
+	// GetCustomerGroupFromKVByChatId
+	//  @Description: 获取指定客户群信息
+	//  @param chatID
+	//  @param sync
+	//  @return chat
+	//
+	GetCustomerGroupFromKVByChatId(chatID string, sync bool) (chat *customerGroupResp.GroupChat)
 }
 
 // iWeWorkBotInterface

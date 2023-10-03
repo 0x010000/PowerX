@@ -9,13 +9,14 @@ import (
 type SceneActivitiesParticipants struct {
 	model.Model
 
-	Aid             uint64 `gorm:"comment:活动ID;column:aid;" json:"aid"`
-	UserId          string `gorm:"comment:用户ID;column:user_id;" json:"user_id"`
-	UserName        string `gorm:"comment:用户;column:user_name;" json:"user_name"`
-	ShareUserId     string `gorm:"comment:分享用户ID;column:share_user_id;" json:"share_user_id"`
-	ShareUserChain  string `gorm:"comment:分享用户链;column:share_user_chain;" json:"share_user_chain"`
-	CustomerGroupId string `gorm:"comment:客户群ID;column:customer_group_id;" json:"customer_group_id"`
-	TaskState       int    `gorm:"comment:任务状态;column:task_state;" json:"task_state"`
+	Aid            uint64 `gorm:"comment:活动ID;column:aid;" json:"aid"`
+	UserId         string `gorm:"comment:用户ID;column:user_id;" json:"user_id"`
+	UserName       string `gorm:"comment:用户;column:user_name;" json:"user_name"`
+	ShareUserId    string `gorm:"comment:分享用户ID;column:share_user_id;" json:"share_user_id"`
+	ShareUserChain string `gorm:"comment:分享用户链;column:share_user_chain;" json:"share_user_chain"`
+	//CustomerGroupId string `gorm:"comment:客户群ID;column:customer_group_id;" json:"customer_group_id"`
+	UnifyId   string `gorm:"comment:客户群,团ID;column:unify_id;" json:"unify_id"`
+	TaskState int    `gorm:"comment:任务状态;column:task_state;" json:"task_state"`
 }
 
 //

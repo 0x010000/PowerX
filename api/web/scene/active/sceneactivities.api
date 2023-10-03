@@ -74,6 +74,6 @@ type (
     ActivitiesQrcodeWeb struct {
         Qid string `json:"qid,optional"`         // 场景码Code
         Link string `json:"link,optional"`       // 场景码Link
-        UnionId string `json:"unionId,optional"` // 绑定ID(群ID,团ID...)
+        UnifyId string `json:"unionId,optional"` // 绑定ID(群ID,团ID...)
     }
 )

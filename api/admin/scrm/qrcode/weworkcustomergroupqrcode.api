@@ -76,6 +76,7 @@ type (
         State int `json:"state"`                                                 // 状态1：启用 2：禁用 3：删除
         ActiveQrcodeLink string `json:"activeQrcodeLink"`                        // 群活码图片地址(可以载入任意媒资文章)
         CPA int `json:"cpa"`                                                     // 活码打开次数
+        UnifyId string `json:"unifyId"`                                          // 团，群ID
     }
 
     QrcodeActiveRequest {
@@ -88,7 +89,7 @@ type (
         SceneLink string `json:"sceneLink"`                                            // 场景落地页
         SafeThresholdValue int `json:"safeThresholdValue,optional"`                    // 安全阈值（默认:0）
         ExpiryDate int64 `json:"expiryDate"`                                           // 有效期截止日(时间戳)
-        UnionId string `json:"unionId,optional"`                                       // 绑定ID(群ID,团ID...)
+        UnifyId string `json:"unifyId,optional"`                                       // 绑定ID(群ID,团ID...)
     }
 
     ActionRequest {

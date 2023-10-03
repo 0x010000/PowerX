@@ -13,6 +13,10 @@ import (
 	admindepartment "PowerX/internal/handler/admin/department"
 	admindictionary "PowerX/internal/handler/admin/dictionary"
 	adminemployee "PowerX/internal/handler/admin/employee"
+	adminhealtharchives "PowerX/internal/handler/admin/health/archives"
+	adminhealthassessment "PowerX/internal/handler/admin/health/assessment"
+	adminhealthcases "PowerX/internal/handler/admin/health/cases"
+	adminhealthcommon "PowerX/internal/handler/admin/health/common"
 	adminmarketmedia "PowerX/internal/handler/admin/market/media"
 	adminmarketstore "PowerX/internal/handler/admin/market/store"
 	adminmediaresource "PowerX/internal/handler/admin/mediaresource"
@@ -1207,6 +1211,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Path:    "/page",
 					Handler: adminscrmcustomer.ListWeWorkCustomerPageHandler(serverCtx),
 				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/option",
+					Handler: adminscrmcustomer.ListWeWorkCustomerOptionHandler(serverCtx),
+				},
 			}...,
 		),
 		rest.WithPrefix("/api/v1/admin/scrm/customer/wechat"),
@@ -1394,6 +1403,92 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/api/v1/admin/scene/active"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.EmployeeJWTAuth},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/page",
+					Handler: adminhealtharchives.ListHealthHeightArchivesPageHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/options",
+					Handler: adminhealtharchives.ListHealthHeightArchivesOptionHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/health/archives"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.EmployeeJWTAuth},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/create",
+					Handler: adminhealthassessment.CreateHealthHeightArchivesAssessmentHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPatch,
+					Path:    "/update",
+					Handler: adminhealthassessment.UpdateHealthHeightArchivesAssessmentHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/page",
+					Handler: adminhealthassessment.ListHealthHeightArchivesAssessmentHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/:pid",
+					Handler: adminhealthassessment.DetailHealthHeightArchivesAssessmentHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/health/assessment"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.EmployeeJWTAuth},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/page",
+					Handler: adminhealthcases.ListHealthHeightCasePageHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/create",
+					Handler: adminhealthcases.CreateHealthHeightCaseHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPatch,
+					Path:    "/update/:pid",
+					Handler: adminhealthcases.UpdateHealthHeightCaseHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/health/cases"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.EmployeeJWTAuth},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/options",
+					Handler: adminhealthcommon.ListHealthHeightStandardOptionHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/health/common"),
 	)
 
 	server.AddRoutes(

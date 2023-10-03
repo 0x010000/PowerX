@@ -979,8 +979,9 @@ type DeleteStoreReply struct {
 }
 
 type AssignStoreManagerRequest struct {
-	Id         int64 `path:"id"`
-	EmployeeId int64 `json:"employeeId"`
+	Id         int64  `path:"id"`
+	EmployeeId int64  `json:"employeeId"`
+	UserId     string `json:"userId,optional"`
 }
 
 type AssignStoreManagerReply struct {
@@ -2268,6 +2269,15 @@ type WechatListCustomersReply struct {
 	Total     int64             `json:"total"`
 }
 
+type WechatListCustomersOptionReply struct {
+	List []*OptionCustomer `json:"list"`
+}
+
+type OptionCustomer struct {
+	Id    string `json:"id"`
+	Names string `json:"names"`
+}
+
 type WechatSyncCustomerReply struct {
 	Status string `json:"status"`
 }
@@ -2496,6 +2506,7 @@ type WeWorkQrcodeActive struct {
 	State              int      `json:"state"`              // 状态1：启用 2：禁用 3：删除
 	ActiveQrcodeLink   string   `json:"activeQrcodeLink"`   // 群活码图片地址(可以载入任意媒资文章)
 	CPA                int      `json:"cpa"`                // 活码打开次数
+	UnifyId            string   `json:"unifyId"`            // 团，群ID
 }
 
 type QrcodeActiveRequest struct {
@@ -2507,7 +2518,7 @@ type QrcodeActiveRequest struct {
 	SceneLink          string   `json:"sceneLink"`                   // 场景落地页
 	SafeThresholdValue int      `json:"safeThresholdValue,optional"` // 安全阈值（默认:0）
 	ExpiryDate         int64    `json:"expiryDate"`                  // 有效期截止日(时间戳)
-	UnionId            string   `json:"unionId,optional"`            // 绑定ID(群ID,团ID...)
+	UnifyId            string   `json:"unifyId,optional"`            // 绑定ID(群ID,团ID...)
 }
 
 type ActionRequest struct {
@@ -2638,11 +2649,11 @@ type ActivitiesListReply struct {
 }
 
 type Active struct {
-	Activities             Activities          `json:"activities"`             // 活动信息
-	ActivitiesPoster       Poster              `json:"activitiesPoster"`       // 活动海报
-	ActivitiesSceneQrcode  []*ActivitiesQrcode `json:"activitiesSceneQrcode"`  // 活动场景码
-	ActivitiesParticipants Participants        `json:"activitiesParticipants"` // 参与概况
-	ActivitiesContent      interface{}         `json:"ActivitiesContent"`      // 活动内容
+	Activities             Activities           `json:"activities"`             // 活动信息
+	ActivitiesPoster       Poster               `json:"activitiesPoster"`       // 活动海报
+	ActivitiesSceneQrcode  ActivitiesWithQrcode `json:"activitiesSceneQrcode"`  // 活动场景码
+	ActivitiesParticipants Participants         `json:"activitiesParticipants"` // 参与概况
+	ActivitiesContent      interface{}          `json:"ActivitiesContent"`      // 活动内容
 }
 
 type Activities struct {
@@ -2659,11 +2670,12 @@ type Activities struct {
 }
 
 type Poster struct {
-	PhotoState bool     `json:"photoState"` // 是否启用头像
-	AliseState bool     `json:"AliseState"` // 是否启用昵称
-	CoverLink  string   `json:"coverLink"`  // 活动封面Link
-	Link       string   `json:"link"`       // 落地页(场景落地页;其他落地页)
-	Position   []string `json:"position"`   // 落地页二维码位置100,200
+	PhotoState     bool     `json:"photoState"`              // 是否启用头像
+	AliseState     bool     `json:"AliseState"`              // 是否启用昵称
+	CoverLink      string   `json:"coverLink"`               // 活动封面Link
+	Link           string   `json:"link"`                    // 落地页(场景落地页;其他落地页)
+	Position       []string `json:"position"`                // 落地页二维码位置100,200
+	MemberMaxLimit int      `json:"memberMaxLimit,optional"` // 单群，团最大限制数，自动切换下一个，至少保留一个
 }
 
 type Participants struct {
@@ -2672,10 +2684,10 @@ type Participants struct {
 }
 
 type ActionActiveRequest struct {
-	Aid               uint64             `path:"aid,optional"` // aid
-	Activities        ActionActivities   `json:"activities"`
-	ActionPoster      ActionPoster       `json:"activitiesPoster"`
-	ActionSceneQrcode []ActivitiesQrcode `json:"activitiesSceneQrcode"`
+	Aid               uint64               `path:"aid,optional"` // aid
+	Activities        ActionActivities     `json:"activities"`
+	ActionPoster      ActionPoster         `json:"activitiesPoster"`
+	ActionSceneQrcode ActivitiesWithQrcode `json:"activitiesSceneQrcode"`
 }
 
 type ActionActivities struct {
@@ -2694,6 +2706,11 @@ type ActionPoster struct {
 	CoverLink  string   `json:"coverLink,optional"`  // 活动封面Link
 	Link       string   `json:"link,optional"`       // 落地页(场景落地页;其他落地页)
 	Position   []string `json:"position,optional"`   // 落地页二维码位置100,200
+}
+
+type ActivitiesWithQrcode struct {
+	MemberMaxLimit    int                 `json:"memberMaxLimit,optional"` // 单群，团最大限制数，自动切换下一个，至少保留一个
+	ActionSceneQrcode []*ActivitiesQrcode `json:"actionSceneQrcode"`
 }
 
 type ActivitiesQrcode struct {
@@ -2722,7 +2739,278 @@ type SceneQrcode struct {
 	RealQrcodeLink   string `json:"realQrcodeLink"` // 真实码
 	Platform         int    `json:"platform"`
 	ActiveQrcodeLink string `json:"activeQrcodeLink"` // 场景码
-	State            int    `json:"state"`
+	State            int    `json:"state"`            // 状态
+	UnifyId          string `json:"unifyId"`          // 群团ID
+}
+
+type HealthHeightArchivesListRequest struct {
+	ExternalUserId     string   `json:"externalUserId,optional"`     //外部用户ID
+	Oid                []int    `json:"oid,optional"`                //档案ID
+	Mobile             string   `json:"mobile,optional"`             //手机号
+	Gender             int      `json:"gender,optional"`             //性别
+	OrgId              int      `json:"orgId,optional"`              //组织机构ID
+	UserId             string   `json:"userId,optional"`             //医生ID
+	NextAssessmentTime []uint64 `json:"nextAssessmentTime,optional"` //下一次复诊时间
+	PageIndex          int      `form:"pageIndex,optional"`
+	PageSize           int      `form:"pageSize,optional"`
+}
+
+type HealthHeightArchivesListReply struct {
+	List      []*Archives `json:"list"`
+	PageIndex int         `json:"pageIndex"`
+	PageSize  int         `json:"pageSize"`
+	Total     int64       `json:"total"`
+}
+
+type HealthHeightArchivesOptionReply struct {
+	List []*Option `json:"list"`
+}
+
+type Archives struct {
+	Oid                         string              `json:"oid,optional"`                         //档案ID
+	Name                        string              `json:"name"`                                 //名称
+	Desc                        string              `json:"desc,optional"`                        //描述
+	ExternalUserId              string              `json:"externalUserId,optional"`              //客户ID(微信)
+	FatherHeight                int                 `json:"fatherHeight"`                         //父亲身高
+	FatherWeight                int                 `json:"fatherWeight"`                         //父亲体重
+	MotherHeight                int                 `json:"motherHeight"`                         //母亲身高
+	MotherWeight                int                 `json:"motherWeight"`                         //母亲体重
+	Gender                      int                 `json:"gender"`                               //性别1: 男 2: 女 3: 保密
+	Age                         float64             `json:"age"`                                  //年龄
+	Birth                       int64               `json:"birth"`                                //出生时间
+	Weight                      int                 `json:"weight,optional"`                      //体重KG
+	Height                      int                 `json:"height,optional"`                      //身高CM
+	GestationalWeeks            int                 `json:"gestationalWeeks,optional"`            //孕周
+	PrevAssessmentTime          uint64              `json:"prevAssessmentTime,optional"`          //上一次诊断时间
+	NextAssessmentTime          uint64              `json:"nextAssessmentTime,optional"`          //下一次复诊时间
+	Portrait                    string              `json:"portrait,optional"`                    //头像
+	OrgId                       int                 `json:"orgId,optional"`                       //组织机构ID
+	UserId                      string              `json:"userId,optional"`                      //医生ID
+	State                       int                 `json:"state,optional"`                       //状态1:启用 2：禁用
+	LastPid                     string              `json:"lastPid,optional"`                     //最后评估报告ID
+	HeathHeightArchivesGuardian []*ArchivesGuardian `json:"heathHeightArchivesGuardian,optional"` //联系人
+}
+
+type ArchivesGuardian struct {
+	Name     string `json:"name,optional"`     //监护人姓名
+	Relation string `json:"relation,optional"` //与被监护人关系
+	Mobile   string `json:"mobile,optional"`   //监护人手机号
+}
+
+type Assessment struct {
+	Pid                      string  `json:"pid,optional"`                      // 评估ID
+	Age                      int     `json:"age,optional"`                      //年龄
+	NowHeight                int     `json:"nowHeight,optional"`                //现在身高CM
+	NowHeightCycleRatio      float64 `json:"nowHeightCycleRatio,optional"`      //现在身高周期比
+	NowWeight                int     `json:"nowWeight,optional"`                //现在体重KG
+	NowWeightCycleRatio      float64 `json:"nowWeightCycleRatio,optional"`      //现在体重周期比
+	BMI                      int     `json:"bmi,optional"`                      //bmi
+	BMICycleRatio            float64 `json:"bmiCycleRatio,optional"`            //BMI周期比
+	AbdominalGirth           int     `json:"abdominalGirth,optional"`           //腹围CM
+	ExpectHeight             int     `json:"expectGeight,optional"`             //期望身高CM
+	ExpectHeightCycleRatio   float64 `json:"expectHeightCycleRatio,optional"`   //期望身高周期比
+	EstimateHeight           int     `json:"estimateHeight,optional"`           //估计身高CM
+	EstimateHeightCycleRatio float64 `json:"estimateHeightCycleRatio,optional"` //估计身高周期比
+	BodyState                int     `json:"bodyState,optional"`                //形体 1:形体偏低 2:匀称超重 3:轻度肥胖 4:中度肥胖 5:重度肥胖
+	GrowthState              int     `json:"growthState,optional"`              //成长状态1:未发育 2:已发育
+	IsFirst                  bool    `json:"isFirst,optional"`                  //是否首次评估
+	Analysis                 string  `json:"analysis,optional"`                 //情况分析
+	RevaluateName            string  `json:"revaluateName,optional"`            //测量人
+	RevaluateTime            int64   `json:"revaluateTime,optional"`            //评估时间
+}
+
+type StateHealthReply struct {
+	Status string `json:"status"`
+}
+
+type Option struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type ActionHealthHeightArchivesAssessmentRequest struct {
+	HeathHeightArchives   *Archives   `json:"heathHeightArchives,optional"`
+	HeathHeightAssessment *Assessment `json:"heathHeightAssessment,optional"`
+}
+
+type ListHealthHeightArchivesAssessmentRequest struct {
+	Pid       string `json:"pid,optional"`
+	Oid       string `json:"oid,optional"`
+	PageIndex int    `form:"pageIndex,optional"`
+	PageSize  int    `form:"pageSize,optional"`
+}
+
+type AssessmentListReply struct {
+	List      []*AssessmentReply `json:"list"`
+	PageIndex int                `json:"pageIndex"`
+	PageSize  int                `json:"pageSize"`
+	Total     int64              `json:"total"`
+}
+
+type AssessmentReply struct {
+	HeathHeightArchives       *Archives                  `json:"heathHeightArchives,optional"`       // 档案信息
+	HeathHeightAssessment     *Assessment                `json:"heathHeightAssessment,optional"`     // 评估信息
+	AssessmentStatisticsIndex *AssessmentStatisticsIndex `json:"assessmentStatisticsIndex,optional"` // 评估报告
+}
+
+type AssessmentStatisticsIndex struct {
+}
+
+type PathRequest struct {
+	Pid string `path:"pid"` // pid
+}
+
+type HealthHeightCaseListRequest struct {
+	Oid       string `json:"oid,optional"` //档案ID
+	Pid       string `json:"pid,optional"` //评估ID
+	Cid       string `json:"cid,optional"` //方案ID
+	PageIndex int    `form:"pageIndex,optional"`
+	PageSize  int    `form:"pageSize,optional"`
+}
+
+type HealthHeightCaseListReply struct {
+	List      []*ListHealthHeightCaseInfo `json:"list"`
+	PageIndex int                         `json:"pageIndex"`
+	PageSize  int                         `json:"pageSize"`
+	Total     int64                       `json:"total"`
+}
+
+type HealthHeightCase struct {
+	Oid                        string                     `json:"oid"`                                 //档案ID
+	Pid                        string                     `json:"pid,optional"`                        //评估ID
+	Cid                        string                     `path:"cid,optional"`                        //方案ID(编辑可用)
+	HeathHeightArchivesCase    HeathHeightArchivesCase    `json:"heathHeightArchivesCase,optional"`    //档案
+	HeathHeightCaseBone        HeathHeightCaseBone        `json:"heathHeightCaseBone,optional"`        //骨龄
+	HeathHeightCaseNourishment HeathHeightCaseNourishment `json:"heathHeightCaseNourishment,optional"` //药物
+	HeathHeightCaseMeal        HeathHeightCaseMeal        `json:"heathHeightCaseMeal,optional"`        //食物
+	HeathHeightCaseSport       HeathHeightCaseSport       `json:"heathHeightCaseSport,optional"`       //运动
+	HeathHeightCaseSleep       HeathHeightCaseSleep       `json:"heathHeightCaseSleep,optional"`       //睡眠
+	HeathHeightCaseEmotion     HeathHeightCaseEmotion     `json:"heathHeightCaseEmotion,optional"`     //情绪
+}
+
+type ListHealthHeightCaseInfo struct {
+	Oid                        string                     `json:"oid"`                                 //档案ID
+	Pid                        string                     `json:"pid,optional"`                        //评估ID
+	Cid                        string                     `path:"cid,optional"`                        //方案ID(编辑可用)
+	HeathHeightArchivesCase    HeathHeightArchivesCase    `json:"heathHeightArchivesCase,optional"`    //档案
+	HeathHeightCaseBone        HeathHeightCaseBone        `json:"heathHeightCaseBone,optional"`        //骨龄
+	HeathHeightCaseNourishment HeathHeightCaseNourishment `json:"heathHeightCaseNourishment,optional"` //药物
+	HeathHeightCaseMeal        HeathHeightCaseMeal        `json:"heathHeightCaseMeal,optional"`        //食物
+	HeathHeightCaseSport       HeathHeightCaseSport       `json:"heathHeightCaseSport,optional"`       //运动
+	HeathHeightCaseSleep       HeathHeightCaseSleep       `json:"heathHeightCaseSleep,optional"`       //睡眠
+	HeathHeightCaseEmotion     HeathHeightCaseEmotion     `json:"heathHeightCaseEmotion,optional"`     //情绪
+	Archives                   Archives                   `json:"archives,optional"`                   //档案信息
+	Assessment                 Assessment                 `json:"assessment"`                          //方案信息
+}
+
+type HeathHeightArchivesCase struct {
+	Diagnostic string `json:"diagnostic,optional"` //诊断情况
+}
+
+type HeathHeightCaseBone struct {
+	HeathHeightCaseBoneWithMenu []*HeathHeightCaseBoneWithMenu `json:"heathHeightCaseBoneWithMenu,optional"`
+}
+
+type HeathHeightCaseBoneWithMenu struct {
+	ExpectHeightYear  int `json:"expectHeightYear,optional"`  //期望年身高
+	ExpectHeightMonth int `json:"expectHeightMonth,optional"` //期望月身高
+	BoneAge           int `json:"boneAge,optional"`           //骨龄
+	ControlHeight     int `json:"controlHeight,optional"`     //控制身高cm
+	ControlWeight     int `json:"controlWeight,optional"`     //控制体重kg
+}
+
+type HeathHeightCaseNourishment struct {
+	HeathHeightCaseNourishmentWithMenu []*HeathHeightCaseNourishmentWithMenu `json:"heathHeightCaseNourishmentWithMenu,optional"` // 清单
+}
+
+type HeathHeightCaseNourishmentWithMenu struct {
+	Name   string `json:"name,optional"`   //营养名称
+	Number int    `json:"number,optional"` //数量
+	Units  string `json:"units,optional"`  //单位
+	Remark string `json:"remark,optional"` //备注
+	Gid    int    `json:"gid,optional"`    //产品品牌型号ID(暂时不使用)
+}
+
+type HeathHeightCaseMeal struct {
+	HeathHeightCaseMealWithMenu    []*HeathHeightCaseMealWithMenu `json:"heathHeightCaseMealWithMenu,optional"`    // 清单
+	HeathHeightCaseMealWithControl HeathHeightCaseMealWithControl `json:"heathHeightCaseMealWithControl,optional"` //
+}
+
+type HeathHeightCaseMealWithMenu struct {
+	Name   string `json:"name,optional"`   //食物名称
+	Remark string `json:"remark,optional"` //备注
+	Gid    int    `json:"gid,optional"`    //产品品牌型号ID(暂时不使用)
+}
+
+type HeathHeightCaseMealWithControl struct {
+	ControlLess       string `json:"controlLess,optional"`       //少使用
+	ControlNonuse     string `json:"controlNonuse,optional"`     //不使用
+	ControlBreakfast  string `json:"controlBreakfast,optional"`  //早餐
+	ControlLunch      string `json:"controlLunch,optional"`      //午餐
+	ControlDinner     string `json:"controlDinner,optional"`     //晚餐
+	ControlMealMinute string `json:"controlMealMinute,optional"` //进餐时长
+}
+
+type HeathHeightCaseSport struct {
+	HeathHeightCaseSportWithMenu  []*HeathHeightCaseSportWithMenu `json:"heathHeightCaseSportWithMenu,optional"`
+	HeathHeightCaseSportWithOther HeathHeightCaseSportWithOther   `json:"heathHeightCaseSportWithOther,optional"`
+}
+
+type HeathHeightCaseSportWithMenu struct {
+	Name   string `gorm:"comment:名称;column:name" json:"name"`      //名称
+	Number int    `gorm:"comment:运动量;column:number" json:"number"` //运动量
+	Units  string `gorm:"comment:单位;column:units" json:"units"`    //单位
+	Remark string `gorm:"comment:备注;column:remark" json:"remark"`  //备注
+	Gid    int    `json:"gid,optional"`                            //产品品牌型号ID(暂时不使用)
+}
+
+type HeathHeightCaseSportWithOther struct {
+	Remark string `gorm:"comment:备注;column:remark" json:"remark"` //备注
+}
+
+type HeathHeightCaseSleep struct {
+	Remark string `json:"remark,optional"` //睡眠
+}
+
+type HeathHeightCaseEmotion struct {
+	Remark string `json:"remark,optional"` //情绪管理
+}
+
+type HealthHeightStandardListRequest struct {
+	Gender int `json:"gender,optional"`
+}
+
+type HealthHeightStandardListReply struct {
+	Age    int     `json:"age"`
+	Old    string  `json:"old"`
+	Gender int     `json:"gender"`
+	HP03   float64 `json:"hp03"`
+	HP10   float64 `json:"hp10"`
+	HP25   float64 `json:"hp25"`
+	HP50   float64 `json:"hp50"`
+	HP75   float64 `json:"hp75"`
+	HP90   float64 `json:"hp90"`
+	HP97   float64 `json:"hp97"`
+	WP03   float64 `json:"wp03"`
+	WP10   float64 `json:"wp10"`
+	WP25   float64 `json:"wp25"`
+	WP50   float64 `json:"wp50"`
+	WP75   float64 `json:"wp75"`
+	WP90   float64 `json:"wp90"`
+	WP97   float64 `json:"wp97"`
+	BP03   float64 `json:"bp03"`
+	BP10   float64 `json:"bp10"`
+	BP25   float64 `json:"bp25"`
+	BP50   float64 `json:"bp50"`
+	BP75   float64 `json:"bp75"`
+	BP90   float64 `json:"bp90"`
+	BP97   float64 `json:"bp97"`
+	HM     float64 `json:"hm"` //身高平均值
+	HL     float64 `json:"hl"` //身高偏差值
+}
+
+type HealthHeightStandardOptionReply struct {
+	List []*HealthHeightStandardListReply `json:"list"`
 }
 
 type MPCustomerLoginRequest struct {
@@ -3234,5 +3522,5 @@ type ParticipantsWeb struct {
 type ActivitiesQrcodeWeb struct {
 	Qid     string `json:"qid,optional"`     // 场景码Code
 	Link    string `json:"link,optional"`    // 场景码Link
-	UnionId string `json:"unionId,optional"` // 绑定ID(群ID,团ID...)
+	UnifyId string `json:"unionId,optional"` // 绑定ID(群ID,团ID...)
 }
